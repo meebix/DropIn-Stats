@@ -1,0 +1,10 @@
+{
+  "name": "dropinStats",
+  "version": "1.0.0",
+  "description": "Scripts to calculate stats",
+  "dependencies": {
+    "parse": "1.5.0",
+    "moment": "2.10.6",
+    "underscore": "1.8.3"
+  }
+}
