@@ -55,12 +55,14 @@ function calcStats(bar) {
     var registeredUsers = results.length;
 
     // 2. Number of active users per bar
-    var activeUsers = 0;
+    var activeLastWeekUsers = 0;
+    var activeLastMonthUsers = 0;
     var activeMales = 0;
     var activeFemales = 0;
 
     var newDate = new Date();
-    var activeDate = newDate.setDate(newDate.getDate() - 30);
+    var activeLastWeekDate = newDate.setDate(newDate.getDate() - 7);
+    var activeLastMonthDate = newDate.setDate(newDate.getDate() - 30);
 
     var withLastDate = _.filter(results, function(obj) {
       if (obj.lastVisit !== undefined) {
@@ -71,8 +73,12 @@ function calcStats(bar) {
     _.each(withLastDate, function(obj) {
       var userObj = obj.appUser.attributes;
 
-      if (obj.lastVisit > activeDate) {
-        activeUsers++;
+      if (obj.lastVisit > activeLastWeekDate) {
+        activeLastWeekUsers++;
+      }
+
+      if (obj.lastVisit > activeLastMonthDate) {
+        activeLastMonthUsers++;
       }
 
       if (userObj.gender === 'XY') activeMales++;
@@ -124,7 +130,8 @@ function calcStats(bar) {
     // Calculated stats object
     var stats = {
       registeredUsers: registeredUsers,
-      activeUsers: activeUsers,
+      activeLastWeekUsers: activeLastWeekUsers,
+      activeLastMonthUsers: activeLastMonthUsers,
       activeMales: activeMales,
       activeFemales: activeFemales,
       age21_24: age21_24,
