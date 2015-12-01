@@ -38,9 +38,11 @@ function calcStats(bar) {
   usersRewardsQuery.equalTo('barId', bar);
   usersRewardsQuery.include('userId');
   usersRewardsQuery.find().then(function(results) {
+    // Number of redeemed rewards per bar
     _.each(results, function(obj) {
       var userHasRedeemed = obj.attributes.userHasRedeemed;
 
+      // If the user redeemed a reward at this bar, increment the count
       if (userHasRedeemed) {
         rewardsRedeemed++;
       }
@@ -57,11 +59,12 @@ function calcStats(bar) {
   .then(function() {
     var newStat = new StatsRewards();
 
-    newStat.save(data.stats).then(function() {
+    newStat.save(data.stats).then(function(savedObj) {
       // success
-      console.log('saved!');
+      console.log('Parse record with object ID: ' + savedObj.id + ' has been successfully created.');
     }, function(error) {
-      console.log(error);
+      // error
+      console.log('An error has occured: ' + error);
     });
   });
 }

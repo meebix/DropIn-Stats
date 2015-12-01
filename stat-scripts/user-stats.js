@@ -31,17 +31,16 @@ barQuery
 
 // Main function
 function calcStats(bar) {
-  var stats = {
-    calcDate: new Date(), // Point in time date tracking
-    barId: bar,
-    activeUsersByCredit: 0
-  };
+  // Initialize master object to carry state of calculations through promises
+  var data = {};
 
   // Stat Calculations
   algoQuery.equalTo('barId', bar);
   algoQuery.include('userId.roleId');
   algoQuery.find().then(function(algoObjs) {
+    var activeUsersByCredit = 0;
 
+    // Filter to get users whose lastCreditEarned was within the past 30 days (rolling)
     var hasEarnedCreditWithinLast30Days = _.filter(algoObjs, function(obj) {
       var date30DaysAgo = moment(new Date()).subtract(30, 'days');
       var lastCreditEarnedDate = moment(obj.attributes.lastCreditEarned);
@@ -51,22 +50,32 @@ function calcStats(bar) {
       }
     });
 
+    // Number of active users by credit earned
     _.each(hasEarnedCreditWithinLast30Days, function(result) {
       var userRole = result.attributes.userId.attributes.roleId.attributes.name.toLowerCase();
 
       if (userRole === 'user') {
-        stats.activeUsersByCredit++;
+        activeUsersByCredit++;
       }
     });
+
+    var stats = {
+      calcDate: new Date(), // Point in time date tracking
+      barId: bar,
+      activeUsersByCredit: activeUsersByCredit
+    };
+
+    data.stats = stats;
   })
   .then(function() {
     var newStat = new StatsUsers();
 
-    newStat.save(stats).then(function() {
+    newStat.save(data.stats).then(function(savedObj) {
       // success
-      console.log('saved!');
+      console.log('Parse record with object ID: ' + savedObj.id + ' has been successfully created.');
     }, function(error) {
-      console.log(error);
+      // error
+      console.log('An error has occured: ' + error);
     });
   });
 }

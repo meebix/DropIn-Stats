@@ -42,6 +42,7 @@ function calcStats() {
     usersQuery.equalTo('roleId', role);
     usersQuery.include('loyaltyLevelId');
     return usersQuery.find().then(function(userObjs) {
+      // Initialize variables for stats
       var totalMales = 0;
       var totalFemales = 0;
       var totalGuests = 0;
@@ -52,13 +53,11 @@ function calcStats() {
       var age2529 = 0;
       var age2124 = 0;
 
-      // 1. Total number of Drop In users
+      // Total number of Drop In users
       var totalUsers = userObjs.length;
 
       _.each(userObjs, function(user) {
-        // 2. Total number of active users (visited bar within a rolling 30 day window)
-
-        // 3. Number of males and females
+        // Number of males and females
         var gender = user.attributes.gender.toLowerCase();
 
         if (gender === 'male') {
@@ -67,7 +66,7 @@ function calcStats() {
           totalFemales++;
         }
 
-        // 4. Number of users by loyalty level
+        // Number of users by loyalty level
         var loyaltyLevel = user.attributes.loyaltyLevelId.attributes.name.toLowerCase();
 
         if (loyaltyLevel === 'guest') {
@@ -78,7 +77,7 @@ function calcStats() {
           totalVips++;
         }
 
-        // 5. Number of users by age
+        // Number of users by age
         var dateGt35 = moment(new Date()).subtract(35, 'years');
         var dateGt30 = moment(new Date()).subtract(30, 'years');
         var dateGt25 = moment(new Date()).subtract(25, 'years');
@@ -115,8 +114,10 @@ function calcStats() {
       return userObjs;
     })
     .then(function(userObjs) {
-      data.stats.totalActiveUsersByCredit = 0; // Add totalActiveUsersByCredit to stats object
+      // Initialize more variables on data.stats object
+      data.stats.totalActiveUsersByCredit = 0;
       data.stats.totalTrafficByCredit = 0;
+
       var date30DaysAgo = moment(new Date()).subtract(30, 'days');
       var dateToday = moment(new Date()).format('MM-DD-YYYY');
 
@@ -129,21 +130,21 @@ function calcStats() {
           algoQuery.equalTo('userId', user);
           return algoQuery.find().then(function(results) {
             _.each(results, function(result) {
-              // var lastVisit = moment(result.attributes.lastVisit);
               var lastCreditDate = moment(result.attributes.lastCreditEarned);
               var lastCreditDateFormatted = moment(result.attributes.lastCreditEarned).format('MM-DD-YYYY');
 
-              // Increase the count for any bar a user has visited within the last 30 days
+              // Increase the active user count for any user who has visited any bar within the last 30 days
               if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isAfter(date30DaysAgo)) {
                 activeUserCreditCount++;
               }
 
+              // Increase the traffic count for any user who visited any bar on today's date
               if (result.attributes.lastCreditEarned !== undefined && lastCreditDateFormatted === dateToday) {
                 trafficCreditCount++;
               }
             });
 
-            // If a user visited at least one bar in the last 30 days, increment totalActiveUsersByVisit
+            // Increment counts on data.stats object to be saved to the DB
             if (activeUserCreditCount > 0) {
               data.stats.totalActiveUsersByCredit++;
             }
@@ -158,6 +159,7 @@ function calcStats() {
       return promise;
     })
     .then(function() {
+      // Number of redeemed rewards
       data.stats.totalRewardsRedeemed = 0;
 
       var promise = Parse.Promise.as();
@@ -166,6 +168,7 @@ function calcStats() {
           promise = promise.then(function() {
             var userHasRedeemed = obj.attributes.userHasRedeemed;
 
+            // If a user has redeemed a reward, increase the count of the data.stats object to be saved to the DB
             if (userHasRedeemed) {
               data.stats.totalRewardsRedeemed++;
             }
@@ -176,14 +179,14 @@ function calcStats() {
       });
     })
     .then(function() {
-      console.log(data.stats);
       var newStat = new StatsDropIn();
 
-      newStat.save(data.stats).then(function() {
+      newStat.save(data.stats).then(function(savedObj) {
         // success
-        console.log('saved!');
+        console.log('Parse record with object ID: ' + savedObj.id + ' has been successfully created.');
       }, function(error) {
-        console.log(error);
+        // error
+        console.log('An error has occured: ' + error);
       });
     });
   });
