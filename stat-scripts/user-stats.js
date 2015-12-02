@@ -52,7 +52,8 @@ function calcStats(bar) {
 
     // Number of active users by credit earned
     _.each(hasEarnedCreditWithinLast30Days, function(result) {
-      var userRole = result.attributes.userId.attributes.roleId.attributes.name.toLowerCase();
+      // Should be able to remove this if statement after DB is cleared? Only one record has no userId??
+      var userRole = result.attributes.userId ? result.attributes.userId.attributes.roleId.attributes.name.toLowerCase() : 0;
 
       if (userRole === 'user') {
         activeUsersByCredit++;
