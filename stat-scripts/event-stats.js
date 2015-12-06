@@ -54,6 +54,18 @@ function calcStats(eventObj) {
     return results;
   })
   .then(function(results) {
+    var barIds = [];
+
+    _.each(results, function(result) {
+      barIds.push(result.attributes.barId);
+    });
+
+    var barId = barIds[0];
+    data.stats.barId = barId;
+
+    return results;
+  })
+  .then(function(results) {
     // Get all events happening today
     var todaysEvents = _.filter(results, function(obj) {
       var todaysDate = moment(new Date()).format('MM-DD-YYYY');
