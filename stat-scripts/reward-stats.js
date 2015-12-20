@@ -8,6 +8,7 @@
 // Requires
 var Parse = require('parse').Parse;
 var _ = require('underscore');
+var moment = require('moment');
 
 // Parse Keys
 Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
@@ -38,12 +39,15 @@ function calcStats(bar) {
   usersRewardsQuery.equalTo('barId', bar);
   usersRewardsQuery.include('userId');
   usersRewardsQuery.find().then(function(results) {
+    var dateToday = moment(new Date()).format('MM-DD-YYYY');
+
     // Number of redeemed rewards per bar
     _.each(results, function(obj) {
       var userHasRedeemed = obj.attributes.userHasRedeemed;
+      var redeemedOnDate = moment(obj.attributes.redeemedOnDate).format('MM-DD-YYYY');
 
       // If the user redeemed a reward at this bar, increment the count
-      if (userHasRedeemed) {
+      if (userHasRedeemed && redeemedOnDate === dateToday) {
         rewardsRedeemed++;
       }
     });

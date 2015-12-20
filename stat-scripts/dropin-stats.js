@@ -124,7 +124,7 @@ function calcStats() {
       var promise = Parse.Promise.as();
       _.each(userObjs, function(user) {
         var activeUserCreditCount = 0;
-        var trafficCreditCount = 0;
+        // var trafficCreditCount = 0;
 
         promise = promise.then(function() {
           algoQuery.equalTo('userId', user);
@@ -140,7 +140,8 @@ function calcStats() {
 
               // Increase the traffic count for any user who visited any bar on today's date
               if (result.attributes.lastCreditEarned !== undefined && lastCreditDateFormatted === dateToday) {
-                trafficCreditCount++;
+                // trafficCreditCount++;
+                data.stats.totalTrafficByCredit++;
               }
             });
 
@@ -149,9 +150,9 @@ function calcStats() {
               data.stats.totalActiveUsersByCredit++;
             }
 
-            if (trafficCreditCount > 0) {
-              data.stats.totalTrafficByCredit++;
-            }
+            // if (trafficCreditCount > 0) {
+            //   data.stats.totalTrafficByCredit++;
+            // }
           });
         });
       });
@@ -159,6 +160,8 @@ function calcStats() {
       return promise;
     })
     .then(function() {
+      var dateToday = moment(new Date()).format('MM-DD-YYYY');
+
       // Number of redeemed rewards
       data.stats.totalRewardsRedeemed = 0;
 
@@ -167,9 +170,10 @@ function calcStats() {
         _.each(results, function(obj) {
           promise = promise.then(function() {
             var userHasRedeemed = obj.attributes.userHasRedeemed;
+            var redeemedOnDate = moment(obj.attributes.redeemedOnDate).format('MM-DD-YYYY');
 
             // If a user has redeemed a reward, increase the count of the data.stats object to be saved to the DB
-            if (userHasRedeemed) {
+            if (userHasRedeemed && redeemedOnDate === dateToday) {
               data.stats.totalRewardsRedeemed++;
             }
           });
