@@ -54,6 +54,7 @@ function calcStats(eventObj) {
     return results;
   })
   .then(function(results) {
+    // Get and set bar ids
     var barIds = [];
 
     _.each(results, function(result) {
@@ -63,15 +64,22 @@ function calcStats(eventObj) {
     var barId = barIds[0];
     data.stats.barId = barId;
 
+    // Get the event start and end dates
+    data.events = [];
+
+    _.each(results, function(result) {
+      data.events.push([result.attributes.eventStart, result.attributes.eventEnd]);
+    });
+
     return results;
   })
   .then(function(results) {
     // Get all events happening today
     var todaysEvents = _.filter(results, function(obj) {
       var todaysDate = moment(new Date()).format('MM-DD-YYYY');
-      var eventDate = moment(obj.attributes.date).format('MM-DD-YYYY');
+      var eventDate = moment(obj.attributes.eventStart).format('MM-DD-YYYY');
 
-      if (obj.attributes.date !== undefined && eventDate === todaysDate) {
+      if (obj.attributes.eventStart !== undefined && eventDate === todaysDate) {
         return obj;
       }
     });
@@ -95,17 +103,17 @@ function calcStats(eventObj) {
   .then(function() {
     // Initialize variable on data.stats object
     data.stats.creditsEarned = 0;
-
+    // console.log(data.events);
     // Number of credits earned on the event date
     _.each(data.algoObjs, function(obj) {
       _.each(obj, function(result) {
-        var todaysDate = moment(new Date()).format('MM-DD-YYYY');
-        var lastCreditEarnedDate = result.attributes.lastCreditEarned !== undefined ? moment(result.attributes.lastCreditEarned).format('MM-DD-YYYY') : 0;
+        var eventStartDate = moment(data.events[0][0]);
+        var eventEndDate = moment(data.events[0][1]);
+        var lastCreditEarnedDate = moment(result.attributes.lastCreditEarned);
 
-        // If a user earned a credit on the day of the event, increment the count to be saved to the DB
-        // data.algoObjs contains only events that are happenin today
-        // Therefore we reaffirm that the lastCreditEarnedDate is indeed todaysDate
-        if (lastCreditEarnedDate === todaysDate) {
+        // data.algoObjs contains only events that are happening today
+        // If the last credit earned date AND time is between the event start and end date/time, increment count
+        if (lastCreditEarnedDate.isBetween(eventStartDate, eventEndDate)) {
           data.stats.creditsEarned++;
         }
       });
