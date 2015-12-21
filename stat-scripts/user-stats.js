@@ -38,6 +38,7 @@ function calcStats(bar) {
   algoQuery.equalTo('barId', bar);
   algoQuery.include('userId.roleId');
   algoQuery.find().then(function(algoObjs) {
+    var usersSeen = {};
     var activeUsersByCredit = 0;
 
     // Filter to get users whose lastCreditEarned was within the past 30 days (rolling)
@@ -52,13 +53,20 @@ function calcStats(bar) {
 
     // Number of active users by credit earned
     _.each(hasEarnedCreditWithinLast30Days, function(result) {
-      // Should be able to remove this if statement after DB is cleared? Only one record has no userId??
-      var userRole = result.attributes.userId ? result.attributes.userId.attributes.roleId.attributes.name.toLowerCase() : 0;
+      var userId = result.attributes.userId.id;
 
-      if (userRole === 'user') {
-        activeUsersByCredit++;
+      // Capture unique users
+      if (usersSeen.hasOwnProperty(userId)) {
+        usersSeen[userId] += 1;
+      } else {
+        usersSeen[userId] = 0;
       }
     });
+
+    // Count unique users and increment credit count
+    for (var id in usersSeen) {
+      activeUsersByCredit++;
+    }
 
     var stats = {
       calcDate: new Date(), // Point in time date tracking
