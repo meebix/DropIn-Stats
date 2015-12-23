@@ -119,7 +119,8 @@ function calcStats() {
       data.stats.totalTrafficByCredit = 0;
 
       var date30DaysAgo = moment(new Date()).subtract(30, 'days');
-      var dateToday = moment(new Date()).format('MM-DD-YYYY');
+      var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
+      var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)
 
       var promise = Parse.Promise.as();
       _.each(userObjs, function(user) {
@@ -131,7 +132,6 @@ function calcStats() {
           return algoQuery.find().then(function(results) {
             _.each(results, function(result) {
               var lastCreditDate = moment(result.attributes.lastCreditEarned);
-              var lastCreditDateFormatted = moment(result.attributes.lastCreditEarned).format('MM-DD-YYYY');
 
               // Increase the active user count for any user who has visited any bar within the last 30 days
               if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isAfter(date30DaysAgo)) {
@@ -139,7 +139,7 @@ function calcStats() {
               }
 
               // Increase the traffic count for any user who visited any bar on today's date
-              if (result.attributes.lastCreditEarned !== undefined && lastCreditDateFormatted === dateToday) {
+              if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isBetween(startDay, endDay)) {
                 // trafficCreditCount++;
                 data.stats.totalTrafficByCredit++;
               }
@@ -160,7 +160,8 @@ function calcStats() {
       return promise;
     })
     .then(function() {
-      var dateToday = moment(new Date()).format('MM-DD-YYYY');
+      var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
+      var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)
 
       // Number of redeemed rewards
       data.stats.totalRewardsRedeemed = 0;
@@ -170,10 +171,10 @@ function calcStats() {
         _.each(results, function(obj) {
           promise = promise.then(function() {
             var userHasRedeemed = obj.attributes.userHasRedeemed;
-            var redeemedOnDate = moment(obj.attributes.redeemedOnDate).format('MM-DD-YYYY');
+            var redeemedOnDate = moment(obj.attributes.redeemedOnDate);
 
             // If a user has redeemed a reward, increase the count of the data.stats object to be saved to the DB
-            if (userHasRedeemed && redeemedOnDate === dateToday) {
+            if (userHasRedeemed && redeemedOnDate.isBetween(startDay, endDay)) {
               data.stats.totalRewardsRedeemed++;
             }
           });

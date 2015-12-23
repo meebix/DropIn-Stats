@@ -41,10 +41,11 @@ function calcStats(bar) {
 
     // Filter to get objects where lastCreditEarned equals today's date
     var earnedCreditToday = _.filter(algoObjs, function(obj) {
-      var dateToday = moment(new Date()).format('MM-DD-YYYY');
-      var lastCreditEarnedDate = moment(obj.attributes.lastCreditEarned).format('MM-DD-YYYY');
+      var lastCreditEarnedDate = moment(obj.attributes.lastCreditEarned);
+      var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
+      var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)
 
-      if (obj.attributes.lastCreditEarned !== undefined && lastCreditEarnedDate === dateToday) {
+      if (obj.attributes.lastCreditEarned !== undefined && lastCreditEarnedDate.isBetween(startDay, endDay)) {
         return obj;
       }
     });
