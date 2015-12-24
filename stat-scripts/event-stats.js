@@ -4,6 +4,7 @@
 'use strict';
 
 // Required tables: Events, Users_Events, Users_Bar_Algo, Stats_Events
+// TODO: Should only run analytics on NEW events, not every event each day
 
 // Requires
 var Parse = require('parse').Parse;
@@ -103,13 +104,17 @@ function calcStats(eventObj) {
   .then(function() {
     // Initialize variable on data.stats object
     data.stats.creditsEarned = 0;
-    // console.log(data.events);
+
     // Number of credits earned on the event date
     _.each(data.algoObjs, function(obj) {
       _.each(obj, function(result) {
+        var lastCreditEarned = result.attributes.lastCreditEarned;
+
         var eventStartDate = moment(data.events[0][0]);
         var eventEndDate = moment(data.events[0][1]);
-        var lastCreditEarnedDate = moment(result.attributes.lastCreditEarned);
+        // Add 360 years to make sure it is not included in stats
+        // Need a moment date to compare even if lastCreditEarned is undefined
+        var lastCreditEarnedDate = lastCreditEarned ? moment(lastCreditEarned) : moment(lastCreditEarned).add(360, 'years');
 
         // data.algoObjs contains only events that are happening today
         // If the last credit earned date AND time is between the event start and end date/time, increment count
