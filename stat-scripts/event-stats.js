@@ -17,18 +17,23 @@ Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
 // Create new objects
 var Events = Parse.Object.extend('Events');
 var UsersEvents = Parse.Object.extend('Users_Events');
-var Algo = Parse.Object.extend('Users_Bar_Algo');
+var Timeline = Parse.Object.extend('Users_Timeline');
 var StatsEvents = Parse.Object.extend('Stats_Events');
 
 // Instantiate queries
 var eventsQuery = new Parse.Query(Events);
 var usersEventsQuery = new Parse.Query(UsersEvents);
-var algoQuery = new Parse.Query(Algo);
+var timelineQuery = new Parse.Query(Timeline);
 
-// Main iteration
+// // Main iteration
 eventsQuery
 .each(function(eventObj) {
-  calcStats(eventObj);
+  var todaysDate = moment(new Date()).format('MM-DD-YYYY');
+  var eventDate = moment(eventObj.attributes.eventStart).format('MM-DD-YYYY');
+
+  if (eventObj.attributes.eventStart !== undefined && eventDate === todaysDate) {
+    calcStats(eventObj);
+  }
 });
 
 // Main function
@@ -36,89 +41,53 @@ function calcStats(eventObj) {
   // Initialize master object to carry state of calculations through promises
   var data = {};
 
-  // Stat Calculations
-  var usersSentTo = 0;
-
   usersEventsQuery.equalTo('eventId', eventObj);
-  usersEventsQuery.include('eventId.userId.barId');
-  usersEventsQuery.find().then(function(results) {
-    // Number of users this event was sent to
-    usersSentTo = results.length;
+  usersEventsQuery.include('userId.barId');
+  return usersEventsQuery.find().then(function(usersEventObj) {
+    // Event ID
+    var eventId = eventObj;
+
+    // Bar ID
+    var barId = usersEventObj[0].attributes.barId;
+
+    // Number of users event was sent to
+    var usersSentTo = usersEventObj.length;
+
+    // Store event start and end date for use later
+    data.eventStart = eventObj.attributes.eventStart;
+    data.eventEnd = eventObj.attributes.eventEnd;
 
     var stats = {
       calcDate: new Date(),
-      eventId: eventObj,
+      eventId: eventId,
+      barId: barId,
       usersSentTo: usersSentTo
     };
 
     data.stats = stats;
-    return results;
-  })
-  .then(function(results) {
-    // Get and set bar ids
-    var barIds = [];
-
-    _.each(results, function(result) {
-      barIds.push(result.attributes.barId);
-    });
-
-    var barId = barIds[0];
-    data.stats.barId = barId;
-
-    // Get the event start and end dates
-    data.events = [];
-
-    _.each(results, function(result) {
-      data.events.push([result.attributes.eventStart, result.attributes.eventEnd]);
-    });
-
-    return results;
-  })
-  .then(function(results) {
-    // Get all events happening today
-    var todaysEvents = _.filter(results, function(obj) {
-      var todaysDate = moment(new Date()).format('MM-DD-YYYY');
-      var eventDate = moment(obj.attributes.eventStart).format('MM-DD-YYYY');
-
-      if (obj.attributes.eventStart !== undefined && eventDate === todaysDate) {
-        return obj;
-      }
-    });
-
-    // For each of the todaysEvents, get the userId.id and plug that into the Algo table
-    var algoObjs = [];
-
-    var promise = Parse.Promise.as();
-    _.each(todaysEvents, function(obj) {
-      promise = promise.then(function() {
-        algoQuery.equalTo('userId', obj.attributes.userId);
-        return algoQuery.find().then(function(algoObj) {
-          algoObjs.push(algoObj);
-        });
-      });
-    });
-
-    data.algoObjs = algoObjs;
-    return promise;
+    return usersEventObj;
   })
   .then(function() {
-    // Initialize variable on data.stats object
     data.stats.creditsEarned = 0;
 
-    // Number of credits earned on the event date
-    _.each(data.algoObjs, function(obj) {
-      _.each(obj, function(result) {
-        var lastCreditEarned = result.attributes.lastCreditEarned;
+    timelineQuery.equalTo('eventType', 'Credit Earned');
+    return timelineQuery.find().then(function(results) {
+      var filterByBar = _.filter(results, function(obj) {
+        if (obj.attributes.barId.id === data.stats.barId.id) {
+          return obj;
+        }
+      });
 
-        var eventStartDate = moment(data.events[0][0]);
-        var eventEndDate = moment(data.events[0][1]);
-        // Add 360 years to make sure it is not included in stats
-        // Need a moment date to compare even if lastCreditEarned is undefined
-        var lastCreditEarnedDate = lastCreditEarned ? moment(lastCreditEarned) : moment(lastCreditEarned).add(360, 'years');
+      // Did any of the users the event was sent to match a user from this subset and is date between event date
+      _.each(filterByBar, function(obj) {
+        var entryDate = moment(obj.attributes.date);
+        var eventStartDate = moment(data.eventStart);
+        var eventEndDate = moment(data.eventEnd);
 
-        // data.algoObjs contains only events that are happening today
-        // If the last credit earned date AND time is between the event start and end date/time, increment count
-        if (lastCreditEarnedDate.isBetween(eventStartDate, eventEndDate)) {
+        // Testing
+        // console.log(data.stats.eventId.id, eventStartDate._d, eventEndDate._d, obj.attributes.userId.id, entryDate._d, entryDate.isBetween(eventStartDate, eventEndDate));
+
+        if (entryDate.isBetween(eventStartDate, eventEndDate)) {
           data.stats.creditsEarned++;
         }
       });

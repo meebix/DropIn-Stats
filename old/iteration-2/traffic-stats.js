@@ -16,11 +16,11 @@ Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
 // Create new objects
 var Bar = Parse.Object.extend('Bar');
 var StatsTraffic = Parse.Object.extend('Stats_Traffic');
-var Timeline = Parse.Object.extend('Users_Timeline');
+var Algo = Parse.Object.extend('Users_Bar_Algo');
 
 // Instantiate queries
 var barQuery = new Parse.Query(Bar);
-var timelineQuery = new Parse.Query(Timeline);
+var algoQuery = new Parse.Query(Algo);
 
 // Main iteration
 barQuery
@@ -34,24 +34,27 @@ function calcStats(bar) {
   var data = {};
 
   // Stat Calculations
-  timelineQuery.equalTo('barId', bar);
-  timelineQuery.include('userId');
-  timelineQuery.find().then(function(timelineObjs) {
+  algoQuery.equalTo('barId', bar);
+  algoQuery.include('userId.roleId');
+  algoQuery.find().then(function(algoObjs) {
     var visitsByCredit = 0;
 
-    var filterByEventType = _.filter(timelineObjs, function(obj) {
-      if (obj.attributes.eventType === 'Credit Earned') {
+    // Filter to get objects where lastCreditEarned equals today's date
+    var earnedCreditToday = _.filter(algoObjs, function(obj) {
+      var lastCreditEarnedDate = moment(obj.attributes.lastCreditEarned);
+      var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
+      var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)
+
+      if (obj.attributes.lastCreditEarned !== undefined && lastCreditEarnedDate.isBetween(startDay, endDay)) {
         return obj;
       }
     });
 
-    var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
-    var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)
+    // Number of users who visited a bar today and earned a credit
+    _.each(earnedCreditToday, function(result) {
+      var userRole = result.attributes.userId.attributes.roleId.attributes.name.toLowerCase();
 
-    _.each(filterByEventType, function(obj) {
-      var creditEarnedDate = moment(obj.attributes.date);
-
-      if (obj.attributes.date !== undefined && creditEarnedDate.isBetween(startDay, endDay)) {
+      if (userRole === 'user') {
         visitsByCredit++;
       }
     });
