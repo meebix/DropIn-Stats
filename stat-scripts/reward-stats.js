@@ -38,6 +38,7 @@ function calcStats(bar) {
 
   usersRewardsQuery.equalTo('barId', bar);
   usersRewardsQuery.include('userId');
+  usersRewardsQuery.limit(1000);
   usersRewardsQuery.find().then(function(results) {
     var startDay = moment().subtract(1, 'days').hours(9).minute(0).second(0).millisecond(0); // 9am yesterday UTC (4am EST)
     var endDay = moment().hours(9).minute(0).second(0).millisecond(0); // 9am today UTC (4am EST)

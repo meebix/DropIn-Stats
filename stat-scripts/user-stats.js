@@ -37,6 +37,7 @@ function calcStats(bar) {
   // Stat Calculations
   algoQuery.equalTo('barId', bar);
   algoQuery.include('userId.roleId');
+  algoQuery.limit(1000);
   algoQuery.find().then(function(algoObjs) {
     var usersSeen = {};
     var activeUsersByCredit = 0;

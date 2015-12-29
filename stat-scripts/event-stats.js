@@ -44,6 +44,7 @@ function calcStats(eventObj) {
 
   usersEventsQuery.equalTo('eventId', eventObj);
   usersEventsQuery.include('userId.barId');
+  usersEventsQuery.limit(1000);
   return usersEventsQuery.find().then(function(usersEventObjs) {
     // Event ID
     var eventId = eventObj;
@@ -80,6 +81,7 @@ function calcStats(eventObj) {
     data.stats.creditsEarned = 0;
 
     timelineQuery.equalTo('eventType', 'Credit Earned');
+    timelineQuery.limit(1000);
     return timelineQuery.find().then(function(results) {
       var filterByBar = _.filter(results, function(obj) {
         if (obj.attributes.barId.id === data.stats.barId.id) {

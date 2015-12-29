@@ -36,6 +36,7 @@ function calcStats(bar) {
   // Stat Calculations
   timelineQuery.equalTo('barId', bar);
   timelineQuery.include('userId');
+  timelineQuery.limit(1000);
   timelineQuery.find().then(function(timelineObjs) {
     var visitsByCredit = 0;
 

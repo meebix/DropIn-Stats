@@ -35,12 +35,14 @@ function calcStats() {
 
   // Stat Calculations
   roleQuery.equalTo('name', 'User');
+  roleQuery.limit(1000);
   roleQuery.first().then(function(role) {
     return role;
   })
   .then(function(role) {
     usersQuery.equalTo('roleId', role);
     usersQuery.include('loyaltyLevelId');
+    usersQuery.limit(1000);
     return usersQuery.find().then(function(userObjs) {
       // Initialize variables for stats
       var totalMales = 0;
@@ -129,6 +131,7 @@ function calcStats() {
 
         promise = promise.then(function() {
           algoQuery.equalTo('userId', user);
+          algoQuery.limit(1000);
           return algoQuery.find().then(function(results) {
             _.each(results, function(result) {
               var lastCreditDate = moment(result.attributes.lastCreditEarned);
@@ -167,6 +170,7 @@ function calcStats() {
       data.stats.totalRewardsRedeemed = 0;
 
       var promise = Parse.Promise.as();
+      usersRewardsQuery.limit(1000);
       return usersRewardsQuery.find().then(function(results) {
         _.each(results, function(obj) {
           promise = promise.then(function() {
