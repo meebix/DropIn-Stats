@@ -44,7 +44,7 @@ function calcStats(bar) {
 
     // Filter to get users whose lastCreditEarned was within the past 30 days (rolling)
     var hasEarnedCreditWithinLast30Days = _.filter(algoObjs, function(obj) {
-      var date30DaysAgo = moment(new Date()).subtract(30, 'days');
+      var date30DaysAgo = moment(new Date()).subtract(2, 'days');
       var lastCreditEarnedDate = moment(obj.attributes.lastCreditEarned);
 
       if (obj.attributes.lastCreditEarned !== undefined && lastCreditEarnedDate.isAfter(date30DaysAgo)) {
