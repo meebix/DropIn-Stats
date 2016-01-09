@@ -126,7 +126,7 @@ function calcStats() {
 
       var promise = Parse.Promise.as();
       _.each(userObjs, function(user) {
-        var activeUserCreditCount = 0;
+        // var activeUserCreditCount = 0;
         // var trafficCreditCount = 0;
 
         promise = promise.then(function() {
@@ -138,7 +138,7 @@ function calcStats() {
 
               // Increase the active user count for any user who has visited any bar within the last 30 days
               if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isAfter(date30DaysAgo)) {
-                activeUserCreditCount++;
+                data.stats.totalActiveUsersByCredit++;
               }
 
               // Increase the traffic count for any user who visited any bar on today's date
@@ -149,9 +149,9 @@ function calcStats() {
             });
 
             // Increment counts on data.stats object to be saved to the DB
-            if (activeUserCreditCount > 0) {
-              data.stats.totalActiveUsersByCredit++;
-            }
+            // if (activeUserCreditCount > 0) {
+            //   data.stats.totalActiveUsersByCredit++;
+            // }
 
             // if (trafficCreditCount > 0) {
             //   data.stats.totalTrafficByCredit++;
