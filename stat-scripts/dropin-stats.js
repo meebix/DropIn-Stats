@@ -127,7 +127,7 @@ function calcStats() {
       var promise = Parse.Promise.as();
       _.each(userObjs, function(user) {
         var activeUserCreditCount = 0;
-        var trafficCreditCount = 0;
+        // var trafficCreditCount = 0;
 
         promise = promise.then(function() {
           timelineQuery.equalTo('userId', user);
@@ -149,7 +149,7 @@ function calcStats() {
 
               // Increase the traffic count for any user who visited any bar on today's date
               if (result.attributes.date !== undefined && lastCreditDate.isBetween(startDay, endDay)) {
-                trafficCreditCount++;
+                data.stats.totalTrafficByCredit++;
               }
             });
 
@@ -158,9 +158,9 @@ function calcStats() {
               data.stats.totalActiveUsersByCredit++;
             }
 
-            if (trafficCreditCount > 0) {
-              data.stats.totalTrafficByCredit++;
-            }
+            // if (trafficCreditCount > 0) {
+            //   data.stats.totalTrafficByCredit++;
+            // }
           });
         });
       });
