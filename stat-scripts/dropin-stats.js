@@ -16,14 +16,14 @@ Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
 // Create new objects
 var Role = Parse.Object.extend('Role');
 var StatsDropIn = Parse.Object.extend('Stats_DropIn');
-var Algo = Parse.Object.extend('Users_Bar_Algo');
 var UsersRewards = Parse.Object.extend('Users_Rewards');
+var Timeline = Parse.Object.extend('Users_Timeline');
 
 // Instantiate queries
 var roleQuery = new Parse.Query(Role);
-var algoQuery = new Parse.Query(Algo);
 var usersQuery = new Parse.Query(Parse.User);
 var usersRewardsQuery = new Parse.Query(UsersRewards);
+var timelineQuery = new Parse.Query(Timeline);
 
 // Main iteration
 calcStats();
@@ -126,36 +126,35 @@ function calcStats() {
 
       var promise = Parse.Promise.as();
       _.each(userObjs, function(user) {
-        // var activeUserCreditCount = 0;
-        // var trafficCreditCount = 0;
+        var activeUserCreditCount = 0;
+        var trafficCreditCount = 0;
 
         promise = promise.then(function() {
-          algoQuery.equalTo('userId', user);
-          algoQuery.limit(1000);
-          return algoQuery.find().then(function(results) {
+          timelineQuery.equalTo('userId', user);
+          timelineQuery.limit(1000);
+          return timelineQuery.find().then(function(results) {
             _.each(results, function(result) {
-              var lastCreditDate = moment(result.attributes.lastCreditEarned);
+              var lastCreditDate = moment(result.attributes.date);
 
               // Increase the active user count for any user who has visited any bar within the last 30 days
-              if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isAfter(date30DaysAgo)) {
-                data.stats.totalActiveUsersByCredit++;
+              if (result.attributes.date !== undefined && lastCreditDate.isAfter(date30DaysAgo)) {
+                activeUserCreditCount++;
               }
 
               // Increase the traffic count for any user who visited any bar on today's date
-              if (result.attributes.lastCreditEarned !== undefined && lastCreditDate.isBetween(startDay, endDay)) {
-                // trafficCreditCount++;
-                data.stats.totalTrafficByCredit++;
+              if (result.attributes.date !== undefined && lastCreditDate.isBetween(startDay, endDay)) {
+                trafficCreditCount++;
               }
             });
 
             // Increment counts on data.stats object to be saved to the DB
-            // if (activeUserCreditCount > 0) {
-            //   data.stats.totalActiveUsersByCredit++;
-            // }
+            if (activeUserCreditCount > 0) {
+              data.stats.totalActiveUsersByCredit++;
+            }
 
-            // if (trafficCreditCount > 0) {
-            //   data.stats.totalTrafficByCredit++;
-            // }
+            if (trafficCreditCount > 0) {
+              data.stats.totalTrafficByCredit++;
+            }
           });
         });
       });

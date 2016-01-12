@@ -78,7 +78,6 @@ function calcStats(bar) {
     data.stats = stats;
   })
   .then(function() {
-    console.log(data.stats);
     var newStat = new StatsUsers();
 
     newStat.save(data.stats).then(function(savedObj) {
