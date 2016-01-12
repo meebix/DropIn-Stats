@@ -133,7 +133,13 @@ function calcStats() {
           timelineQuery.equalTo('userId', user);
           timelineQuery.limit(1000);
           return timelineQuery.find().then(function(results) {
-            _.each(results, function(result) {
+            var filterByEventType = _.filter(results, function(obj) {
+              if (obj.attributes.eventType === 'Credit Earned') {
+                return obj;
+              }
+            });
+
+            _.each(filterByEventType, function(result) {
               var lastCreditDate = moment(result.attributes.date);
 
               // Increase the active user count for any user who has visited any bar within the last 30 days
