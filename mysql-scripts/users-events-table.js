@@ -85,7 +85,7 @@ usersEventsQuery.count().then(function(totalRows) {
 .then(function() {
   json2csv({ data: tableData, fields: fields }, function(err, csv) {
     if (err) console.log(err);
-    fs.writeFile(filename, csv, function(err) {
+    fs.writeFile('../csv/' + filename, csv, function(err) {
       if (err) throw err;
       console.log('file saved');
     });
