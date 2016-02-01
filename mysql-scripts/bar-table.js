@@ -21,6 +21,7 @@ var tableData = [];
 var filename = 'bar-table.csv';
 var fields = [
   'objectId',
+  'name',
   'isActive',
   'createdAt',
   'updatedAt'
@@ -54,6 +55,7 @@ barQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
+            name: obj.attributes.name,
             isActive: obj.attributes.isActive,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
