@@ -22,9 +22,6 @@ end
 class Timeline < ActiveRecord::Base
 end
 
-class TrafficStats < ActiveRecord::Base
-end
-
 def bar_pointer(bar_id)
   bar_query = Parse::Query.new("Bar")
   bar_query.eq("objectId", "#{bar_id}")
@@ -52,7 +49,7 @@ def calc_stats(bar_id)
     SELECT * FROM timelines
     WHERE bar_id = '#{bar_id}' AND
                     event_type = 'Credit Earned' AND
-                    date between '#{start_calc_datetime}' and '#{end_calc_datetime}'
+                    date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
   ").count
 
   save_stats(bar_id, credits_earned)
