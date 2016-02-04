@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd ~/mysql/mysql-scripts/
+cd ~/stats/stats-scripts/
 
 /usr/bin/nodejs  bar-table.js
 /usr/bin/nodejs  events-table.js
