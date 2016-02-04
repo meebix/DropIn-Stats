@@ -32,7 +32,8 @@ def bar_pointer(bar_id)
 end
 
 def save_stats(bar_id, credits_earned)
-  traffic_stats = Parse::Object.new("Stats_Test")
+  traffic_stats = Parse::Object.new("Stats_Traffic")
+  bar = bar_pointer(bar_id)
 
   traffic_stats["calcDate"] = Parse::Date.new(DateTime.now)
   traffic_stats["barId"] = bar
