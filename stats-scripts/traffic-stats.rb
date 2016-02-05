@@ -13,8 +13,7 @@ ActiveRecord::Base.establish_connection(
   password: ENV["DB_PASSWORD"]
 )
 
-parse = Parse.init :application_id => ENV["PARSE_ID"],
-                              :api_key          => ENV["PARSE_REST_API"]
+parse = Parse.init application_id: ENV["PARSE_ID"], api_key: ENV["PARSE_REST_API"]
 
 class Bar < ActiveRecord::Base
 end
@@ -28,7 +27,10 @@ def bar_pointer(bar_id)
   bar = bar_query.get.first
 end
 
-def save_stats(bar_id, credits_earned)
+def save_stats(
+  bar_id,
+  credits_earned
+)
   traffic_stats = Parse::Object.new("Stats_Traffic")
   bar = bar_pointer(bar_id)
 
@@ -52,7 +54,10 @@ def calc_stats(bar_id)
                     date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
   ").count
 
-  save_stats(bar_id, credits_earned)
+  save_stats(
+    bar_id,
+    credits_earned
+  )
 end
 
 Bar.find_each do |bar|

@@ -13,8 +13,7 @@ ActiveRecord::Base.establish_connection(
   password: ENV["DB_PASSWORD"]
 )
 
-parse = Parse.init :application_id => ENV["PARSE_ID"],
-                              :api_key          => ENV["PARSE_REST_API"]
+parse = Parse.init application_id: ENV["PARSE_ID"], api_key: ENV["PARSE_REST_API"]
 
 class Bar < ActiveRecord::Base
 end
@@ -28,7 +27,10 @@ def bar_pointer(bar_id)
   bar = bar_query.get.first
 end
 
-def save_stats(bar_id, active_users)
+def save_stats(
+  bar_id,
+  active_users
+)
   user_stats = Parse::Object.new("Stats_Users")
   bar = bar_pointer(bar_id)
 
@@ -51,7 +53,10 @@ def calc_stats(bar_id)
     date >= '#{thirty_days_ago}'
   ").count
 
-  save_stats(bar_id, active_users)
+  save_stats(
+    bar_id,
+    active_users
+  )
 end
 
 Bar.find_each do |bar|
