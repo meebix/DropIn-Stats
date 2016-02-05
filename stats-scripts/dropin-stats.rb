@@ -52,7 +52,7 @@ def calc_stats()
   start_calc_datetime = 1.day.ago.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
 
-  thirty_days_ago = 30.days.ago.iso8601
+  thirty_days_ago = 2.days.ago.iso8601
 
   thirty_five_years_ago = 35.years.ago.iso8601
   thirty_years_ago = 30.years.ago.iso8601

@@ -42,7 +42,7 @@ def save_stats(bar_id, active_users)
 end
 
 def calc_stats(bar_id)
-  thirty_days_ago = 30.days.ago.iso8601
+  thirty_days_ago = 2.days.ago.iso8601
 
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
