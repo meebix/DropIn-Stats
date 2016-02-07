@@ -89,13 +89,13 @@ def calc_stats()
   ").count
 
   traffic = Timeline.find_by_sql("
-    SELECT DISTINCT user_id FROM timelines
+    SELECT * FROM timelines
     WHERE event_type = 'Credit Earned' AND
     date >= '#{thirty_days_ago}'
   ").count
 
   rewards_redeemed = RewardsUsers.find_by_sql("
-    SELECT * FROM rewards_users
+    SELECT DISTINCT user_id FROM rewards_users
     WHERE user_has_redeemed = 1 AND
     redeemed_date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
   ").count
