@@ -78,11 +78,14 @@ def calc_stats(
     ").count
 
     credits_earned = Event.find_by_sql("
-      SELECT DISTINCT t.user_id FROM timelines t
-      JOIN events_users eu ON eu.user_id = t.user_id
+      SELECT * FROM timelines
       WHERE event_type = 'Credit Earned' AND
-      t.bar_id = '#{bar_id}' AND
-      t.date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
+      bar_id = '#{bar_id}' AND
+      date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}' AND
+      user_id IN (
+        SELECT DISTINCT user_id FROM events_users
+        WHERE event_id = '#{event_id}'
+      )
     ").count
 
     save_stats(
