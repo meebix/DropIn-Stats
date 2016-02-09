@@ -54,7 +54,7 @@ def save_stats(
 
   event_stats.save
 
-  puts "Event stats record successfully created for bar #{bar_id}"
+  puts "Event stats record successfully created for event #{event_id}"
 end
 
 def calc_stats(

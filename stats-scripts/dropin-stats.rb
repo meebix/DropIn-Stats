@@ -66,7 +66,6 @@ def calc_stats()
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
 
   thirty_days_ago = 2.days.ago.iso8601
-
   thirty_five_years_ago = 35.years.ago.iso8601
   thirty_years_ago = 30.years.ago.iso8601
   twenty_five_years_ago = 25.years.ago.iso8601
@@ -83,19 +82,19 @@ def calc_stats()
   age_2124 = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND dob >= '#{twenty_five_years_ago}'").count
 
   active_users = Timeline.find_by_sql("
-    SELECT * FROM timelines
+    SELECT DISTINCT user_id FROM timelines
     WHERE event_type = 'Credit Earned' AND
-    date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
+    date >= '#{thirty_days_ago}'
   ").count
 
   traffic = Timeline.find_by_sql("
     SELECT * FROM timelines
     WHERE event_type = 'Credit Earned' AND
-    date >= '#{thirty_days_ago}'
+    date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
   ").count
 
   rewards_redeemed = RewardsUsers.find_by_sql("
-    SELECT DISTINCT user_id FROM rewards_users
+    SELECT * FROM rewards_users
     WHERE user_has_redeemed = 1 AND
     redeemed_date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
   ").count
