@@ -61,11 +61,15 @@ def calc_stats(
   event_id,
   event_name,
   bar_id,
+  event_start,
   event_end
 )
   start_calc_datetime = 1.day.ago.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   event_date_in_range = (start_calc_datetime..end_calc_datetime).cover?(event_end)
+
+  event_start_datetime = event_start.iso8601
+  event_end_datetime = event_end.iso8601
 
   if event_date_in_range
     puts "Running event stats for #{event_name}"
@@ -73,15 +77,14 @@ def calc_stats(
     users_sent_to = Event.find_by_sql("
       SELECT DISTINCT eu.user_id FROM events e
       JOIN events_users eu ON eu.event_id = e.object_id
-      WHERE e.object_id = '#{event_id}' AND
-      e.event_end BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
+      WHERE e.object_id = '#{event_id}'
     ").count
 
     credits_earned = Event.find_by_sql("
       SELECT * FROM timelines
       WHERE event_type = 'Credit Earned' AND
       bar_id = '#{bar_id}' AND
-      date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}' AND
+      date BETWEEN '#{event_start_datetime}' AND '#{event_end_datetime}' AND
       user_id IN (
         SELECT DISTINCT user_id FROM events_users
         WHERE event_id = '#{event_id}'
@@ -98,5 +101,5 @@ def calc_stats(
 end
 
 Event.find_each do |event|
-  calc_stats(event.object_id, event.name, event.bar_id, event.event_end)
+  calc_stats(event.object_id, event.name, event.bar_id, event.event_start, event.event_end)
 end
