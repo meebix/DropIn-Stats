@@ -65,7 +65,8 @@ def calc_stats()
   start_calc_datetime = 1.day.ago.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
 
-  thirty_days_ago = 2.days.ago.iso8601
+  fourteen_days_ago = 14.days.ago.iso8601
+
   thirty_five_years_ago = 35.years.ago.iso8601
   thirty_years_ago = 30.years.ago.iso8601
   twenty_five_years_ago = 25.years.ago.iso8601
@@ -84,7 +85,7 @@ def calc_stats()
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
     WHERE event_type = 'Credit Earned' AND
-    date >= '#{thirty_days_ago}'
+    date >= '#{fourteen_days_ago}'
   ").count
 
   traffic = Timeline.find_by_sql("

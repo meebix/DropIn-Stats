@@ -44,13 +44,13 @@ def save_stats(
 end
 
 def calc_stats(bar_id)
-  thirty_days_ago = 2.days.ago.iso8601
+  fourteen_days_ago = 14.days.ago.iso8601
 
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
     WHERE bar_id = '#{bar_id}' AND
     event_type = 'Credit Earned' AND
-    date >= '#{thirty_days_ago}'
+    date >= '#{fourteen_days_ago}'
   ").count
 
   save_stats(
