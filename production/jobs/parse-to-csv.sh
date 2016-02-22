@@ -1,7 +1,8 @@
 #!/bin/sh
 
-cd ~/stats/mysql-scripts/
+cd ~/stats/production/mysql-scripts/
 
+# Production
 /usr/bin/nodejs  bar-table.js
 /usr/bin/nodejs  events-table.js
 /usr/bin/nodejs  loyalty-levels-table.js

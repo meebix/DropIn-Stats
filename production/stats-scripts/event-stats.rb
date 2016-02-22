@@ -8,7 +8,7 @@ require 'mysql2'
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',
   host: ENV["DB_HOST"],
-  database: 'dropin',
+  database: ENV["DB"],
   username: ENV["DB_USERNAME"],
   password: ENV["DB_PASSWORD"]
 )

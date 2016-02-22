@@ -8,7 +8,7 @@ require 'mysql2'
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',
   host: ENV["DB_HOST"],
-  database: 'dropin',
+  database: ENV["DB"],
   username: ENV["DB_USERNAME"],
   password: ENV["DB_PASSWORD"]
 )
@@ -29,38 +29,37 @@ end
 
 def save_stats(
   bar_id,
-  credits_earned
+  active_users
 )
-  traffic_stats = Parse::Object.new("Stats_Traffic")
+  user_stats = Parse::Object.new("Stats_Users")
   bar = bar_pointer(bar_id)
 
-  traffic_stats["calcDate"] = Parse::Date.new(DateTime.now)
-  traffic_stats["barId"] = bar
-  traffic_stats["visitsByCredit"] = credits_earned
+  user_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  user_stats["barId"] = bar
+  user_stats["activeUsersByCredit"] = active_users
 
-  traffic_stats.save
+  user_stats.save
 
-  puts "Traffic stats record successfully created for bar #{bar_id}"
+  puts "User stats record successfully created for bar #{bar_id}"
 end
 
 def calc_stats(bar_id)
-  start_calc_datetime = 1.day.ago.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
-  end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
+  fourteen_days_ago = 14.days.ago.iso8601
 
-  credits_earned = Timeline.find_by_sql("
-    SELECT * FROM timelines
+  active_users = Timeline.find_by_sql("
+    SELECT DISTINCT user_id FROM timelines
     WHERE bar_id = '#{bar_id}' AND
-                    event_type = 'Credit Earned' AND
-                    date BETWEEN '#{start_calc_datetime}' AND '#{end_calc_datetime}'
+    event_type = 'Credit Earned' AND
+    date >= '#{fourteen_days_ago}'
   ").count
 
   save_stats(
     bar_id,
-    credits_earned
+    active_users
   )
 end
 
 Bar.find_each do |bar|
-  puts "Running traffic stats for #{bar.name}"
+  puts "Running user stats for #{bar.name}"
   calc_stats(bar.object_id)
 end
