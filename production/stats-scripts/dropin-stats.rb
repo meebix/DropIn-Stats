@@ -41,7 +41,7 @@ def save_stats(
 )
   dropin_stats = Parse::Object.new("Stats_DropIn")
 
-  dropin_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  dropin_stats["calcDate"] = Parse::Date.new(Date.yesterday)
   dropin_stats["totalUsers"] = total_users
   dropin_stats["totalActiveUsersByCredit"] = active_users
   dropin_stats["totalTrafficByCredit"] = traffic

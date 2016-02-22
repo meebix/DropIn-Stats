@@ -34,7 +34,7 @@ def save_stats(
   reward_stats = Parse::Object.new("Stats_Rewards")
   bar = bar_pointer(bar_id)
 
-  reward_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  reward_stats["calcDate"] = Parse::Date.new(Date.yesterday)
   reward_stats["barId"] = bar
   reward_stats["rewardsRedeemed"] = rewards_redeemed
 

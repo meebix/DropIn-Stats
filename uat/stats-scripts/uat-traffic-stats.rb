@@ -34,7 +34,7 @@ def save_stats(
   traffic_stats = Parse::Object.new("Stats_Traffic")
   bar = bar_pointer(bar_id)
 
-  traffic_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  traffic_stats["calcDate"] = Parse::Date.new(Date.yesterday)
   traffic_stats["barId"] = bar
   traffic_stats["visitsByCredit"] = credits_earned
 

@@ -34,7 +34,7 @@ def save_stats(
   user_stats = Parse::Object.new("Stats_Users")
   bar = bar_pointer(bar_id)
 
-  user_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  user_stats["calcDate"] = Parse::Date.new(Date.yesterday)
   user_stats["barId"] = bar
   user_stats["activeUsersByCredit"] = active_users
 

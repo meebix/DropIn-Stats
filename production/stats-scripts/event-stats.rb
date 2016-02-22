@@ -46,7 +46,7 @@ def save_stats(
   event = event_pointer(event_id)
   bar = bar_pointer(bar_id)
 
-  event_stats["calcDate"] = Parse::Date.new(DateTime.now)
+  event_stats["calcDate"] = Parse::Date.new(Date.yesterday)
   event_stats["eventId"] = event
   event_stats["barId"] = bar
   event_stats["usersSentTo"] = users_sent_to
