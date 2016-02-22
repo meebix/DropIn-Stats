@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'role-table.csv';
+var filename = 'uat-role-table.csv';
 var fields = [
   'objectId',
   'name',

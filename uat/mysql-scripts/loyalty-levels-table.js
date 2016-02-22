@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'loyalty-levels-table.csv';
+var filename = 'uat-loyalty-levels-table.csv';
 var fields = [
   'objectId',
   'name',

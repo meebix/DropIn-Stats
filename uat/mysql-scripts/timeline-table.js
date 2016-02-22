@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'timeline-table.csv';
+var filename = 'uat-timeline-table.csv';
 var fields = [
   'objectId',
   'barId',
