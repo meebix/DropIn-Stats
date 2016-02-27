@@ -24,6 +24,30 @@ end
 class RewardsUsers < ActiveRecord::Base
 end
 
+def user_role_object_id
+  user_role_query = Parse::Query.new("Role")
+  user_role_query.eq("name", "User")
+  user_role = user_role_query.get.first["objectId"]
+end
+
+def guest_level_object_id
+  guest_level_query = Parse::Query.new("Loyalty_Levels")
+  guest_level_query.eq("name", "Guest")
+  guest_level = guest_level_query.get.first["objectId"]
+end
+
+def regular_level_object_id
+  regular_level_query = Parse::Query.new("Loyalty_Levels")
+  regular_level_query.eq("name", "Regular")
+  regular_level = regular_level_query.get.first["objectId"]
+end
+
+def vip_level_object_id
+  vip_level_query = Parse::Query.new("Loyalty_Levels")
+  vip_level_query.eq("name", "VIP")
+  vip_level = vip_level_query.get.first["objectId"]
+end
+
 def save_stats(
   total_users,
   total_males,
@@ -71,16 +95,21 @@ def calc_stats()
   thirty_years_ago = 30.years.ago.iso8601
   twenty_five_years_ago = 25.years.ago.iso8601
 
-  total_users = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky'").count
-  total_males = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND gender = 'Male'").count
-  total_females = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND gender = 'Female'").count
-  total_guests = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND loyaltylevel_id = 'M8u8gbUbCz'").count
-  total_regulars = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND loyaltylevel_id = 'rYEH9JLSlP'").count
-  total_vips = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND loyaltylevel_id = 'loQTz5MqpZ'").count
-  age_35plus = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND dob <= '#{thirty_five_years_ago}'").count
-  age_3034 = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND dob BETWEEN '#{thirty_five_years_ago}' AND '#{thirty_years_ago}'").count
-  age_2529 = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND dob BETWEEN '#{thirty_years_ago}' AND '#{twenty_five_years_ago}'").count
-  age_2124 = User.find_by_sql("SELECT * FROM users WHERE role_id = 'ArWsSwq2Ky' AND dob >= '#{twenty_five_years_ago}'").count
+  user_role_id = user_role_object_id
+  guest_level_id = guest_level_object_id
+  regular_level_id = regular_level_object_id
+  vip_level_id = vip_level_object_id
+
+  total_users = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}'").count
+  total_males = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND gender = 'Male'").count
+  total_females = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND gender = 'Female'").count
+  total_guests = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{guest_level_id}'").count
+  total_regulars = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{regular_level_id}'").count
+  total_vips = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{vip_level_id}'").count
+  age_35plus = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND dob <= '#{thirty_five_years_ago}'").count
+  age_3034 = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND dob BETWEEN '#{thirty_five_years_ago}' AND '#{thirty_years_ago}'").count
+  age_2529 = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND dob BETWEEN '#{thirty_years_ago}' AND '#{twenty_five_years_ago}'").count
+  age_2124 = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND dob >= '#{twenty_five_years_ago}'").count
 
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
