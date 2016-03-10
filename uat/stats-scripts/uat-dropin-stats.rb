@@ -52,6 +52,7 @@ def save_stats(
   total_users,
   total_males,
   total_females,
+  total_gender_unknown,
   total_guests,
   total_regulars,
   total_vips,
@@ -72,6 +73,7 @@ def save_stats(
   dropin_stats["totalRewardsRedeemed"] = rewards_redeemed
   dropin_stats["totalMales"] = total_males
   dropin_stats["totalFemales"] = total_females
+  dropin_stats["totalGenderUnknown"] = total_gender_unknown
   dropin_stats["totalGuests"] = total_guests
   dropin_stats["totalRegulars"] = total_regulars
   dropin_stats["totalVips"] = total_vips
@@ -103,6 +105,7 @@ def calc_stats()
   total_users = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}'").count
   total_males = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND gender = 'Male'").count
   total_females = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND gender = 'Female'").count
+  total_gender_unknown = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND gender IS NULL").count
   total_guests = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{guest_level_id}'").count
   total_regulars = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{regular_level_id}'").count
   total_vips = User.find_by_sql("SELECT * FROM users WHERE role_id = '#{user_role_id}' AND loyaltylevel_id = '#{vip_level_id}'").count
@@ -133,6 +136,7 @@ def calc_stats()
     total_users,
     total_males,
     total_females,
+    total_gender_unknown,
     total_guests,
     total_regulars,
     total_vips,
