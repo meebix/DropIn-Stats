@@ -6,9 +6,10 @@ var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
+var env = require('../../environments');
 
 // Parse Keys
-Parse.initialize(process.env.UAT_PARSE_ID, process.env.UAT_PARSE_SECRET);
+Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
 var UsersEvents = Parse.Object.extend('Users_Events');
 

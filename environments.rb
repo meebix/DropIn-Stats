@@ -1,0 +1,7 @@
+if ENV["ENV"] === "production"
+  PARSE_ID = ENV["PARSE_ID"]
+  PARSE_REST_API = ENV["PARSE_REST_API"]
+else
+  PARSE_ID = ENV["UAT_PARSE_ID"]
+  PARSE_REST_API = ENV["UAT_PARSE_REST_API"]
+end
