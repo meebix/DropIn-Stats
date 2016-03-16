@@ -8,10 +8,10 @@ require '../environments'
 
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',
-  host: ENV["DB_HOST"],
-  database: ENV["DB"],
-  username: ENV["DB_USERNAME"],
-  password: ENV["DB_PASSWORD"]
+  host: DB_HOST,
+  database: DB,
+  username: DB_USERNAME,
+  password: DB_PASSWORD
 )
 
 parse = Parse.init application_id: PARSE_ID, api_key: PARSE_REST_API
