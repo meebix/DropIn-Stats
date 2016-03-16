@@ -1,16 +1,16 @@
-// Timeline Table Dump
-//
+// Events Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
+var env = require('../../environments');
 
 // Parse Keys
-Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
+Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var Timeline = Parse.Object.extend('Users_Timeline');
+var Events = Parse.Object.extend('Events');
 
 // Data Dump
 var total;
@@ -18,37 +18,37 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'timeline-table.csv';
+var filename = 'uat-events-table.csv';
 var fields = [
   'objectId',
+  'name',
   'barId',
-  'date',
-  'event',
-  'eventType',
-  'userId',
+  'loyaltyLevelId',
+  'eventStart',
+  'eventEnd',
+  'markedForDeletion',
   'createdAt',
   'updatedAt'
 ];
 
-var timelineQuery = new Parse.Query(Timeline);
-timelineQuery.count().then(function(totalRows) {
+var eventsQuery = new Parse.Query(Events);
+eventsQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var timelineQuery = new Parse.Query(Timeline);
-  console.log(total, iterations);
+  var eventsQuery = new Parse.Query(Events);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      timelineQuery.include('barId.userId');
-      timelineQuery.descending('objectId');
-      timelineQuery.limit(1000);
-      if (!firstRun) timelineQuery.lessThan('objectId', objectId);
-      return timelineQuery.find().then(function(results) {
+      eventsQuery.include('barId.userId');
+      eventsQuery.descending('objectId');
+      eventsQuery.limit(1000);
+      if (!firstRun) eventsQuery.lessThan('objectId', objectId);
+      return eventsQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
@@ -58,11 +58,12 @@ timelineQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            date: obj.attributes.date.toISOString(),
-            event: obj.attributes.event,
-            eventType: obj.attributes.eventType,
-            userId: obj.attributes.userId.id,
+            name: obj.attributes.name,
+            barId: obj.attributes.barId.id,
+            loyaltyLevelId: obj.attributes.loyaltyLevelId.id,
+            eventStart: obj.attributes.eventStart.toISOString(),
+            eventEnd: obj.attributes.eventEnd.toISOString(),
+            markedForDeletion: obj.attributes.markedForDeletion,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

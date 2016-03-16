@@ -9,7 +9,7 @@ require '../../environments'
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',
   host: ENV["DB_HOST"],
-  database: ENV["UAT_DB"],
+  database: ENV["DB"],
   username: ENV["DB_USERNAME"],
   password: ENV["DB_PASSWORD"]
 )

@@ -1,16 +1,16 @@
-// Bar Table Dump
-//
+// Timeline Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
+var env = require('../../environments');
 
 // Parse Keys
-Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
+Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var Bar = Parse.Object.extend('Bar');
+var Timeline = Parse.Object.extend('Users_Timeline');
 
 // Data Dump
 var total;
@@ -18,34 +18,36 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'bar-table.csv';
+var filename = 'uat-timeline-table.csv';
 var fields = [
   'objectId',
-  'name',
-  'isActive',
+  'barId',
+  'date',
+  'event',
+  'eventType',
+  'userId',
   'createdAt',
   'updatedAt'
 ];
 
-var barQuery = new Parse.Query(Bar);
-barQuery.count().then(function(totalRows) {
+var timelineQuery = new Parse.Query(Timeline);
+timelineQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var barQuery = new Parse.Query(Bar);
-  console.log(total, iterations);
+  var timelineQuery = new Parse.Query(Timeline);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      barQuery.include('barId.userId');
-      barQuery.descending('objectId');
-      barQuery.limit(1000);
-      if (!firstRun) barQuery.lessThan('objectId', objectId);
-      return barQuery.find().then(function(results) {
+      timelineQuery.include('barId.userId');
+      timelineQuery.descending('objectId');
+      timelineQuery.limit(1000);
+      if (!firstRun) timelineQuery.lessThan('objectId', objectId);
+      return timelineQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
@@ -55,8 +57,11 @@ barQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            name: obj.attributes.name,
-            isActive: obj.attributes.isActive,
+            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
+            date: obj.attributes.date.toISOString(),
+            event: obj.attributes.event,
+            eventType: obj.attributes.eventType,
+            userId: obj.attributes.userId.id,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

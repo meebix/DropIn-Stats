@@ -1,16 +1,16 @@
-// Events Table Dump
-//
+// Users Events Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
+var env = require('../../environments');
 
 // Parse Keys
-Parse.initialize(process.env.PARSE_ID, process.env.PARSE_SECRET);
+Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var Events = Parse.Object.extend('Events');
+var UsersEvents = Parse.Object.extend('Users_Events');
 
 // Data Dump
 var total;
@@ -18,38 +18,36 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'events-table.csv';
+var filename = 'uat-users-events-table.csv';
 var fields = [
   'objectId',
-  'name',
+  'eventId',
+  'userId',
   'barId',
-  'loyaltyLevelId',
-  'eventStart',
-  'eventEnd',
+  'userHasViewed',
   'markedForDeletion',
   'createdAt',
   'updatedAt'
 ];
 
-var eventsQuery = new Parse.Query(Events);
-eventsQuery.count().then(function(totalRows) {
+var usersEventsQuery = new Parse.Query(UsersEvents);
+usersEventsQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var eventsQuery = new Parse.Query(Events);
-  console.log(total, iterations);
+  var usersEventsQuery = new Parse.Query(UsersEvents);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      eventsQuery.include('barId.userId');
-      eventsQuery.descending('objectId');
-      eventsQuery.limit(1000);
-      if (!firstRun) eventsQuery.lessThan('objectId', objectId);
-      return eventsQuery.find().then(function(results) {
+      usersEventsQuery.include('barId.eventId.userId');
+      usersEventsQuery.descending('objectId');
+      usersEventsQuery.limit(1000);
+      if (!firstRun) usersEventsQuery.lessThan('objectId', objectId);
+      return usersEventsQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
@@ -59,11 +57,10 @@ eventsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            name: obj.attributes.name,
+            eventId: obj.attributes.eventId.id,
+            userId: obj.attributes.userId.id,
             barId: obj.attributes.barId.id,
-            loyaltyLevelId: obj.attributes.loyaltyLevelId.id,
-            eventStart: obj.attributes.eventStart.toISOString(),
-            eventEnd: obj.attributes.eventEnd.toISOString(),
+            userHasViewed: obj.attributes.userHasViewed,
             markedForDeletion: obj.attributes.markedForDeletion,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()

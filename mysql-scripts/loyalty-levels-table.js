@@ -1,5 +1,4 @@
 // Loyalty Levels Table Dump
-// UAT
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');

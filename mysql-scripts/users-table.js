@@ -1,5 +1,4 @@
-// Users Rewards Table Dump
-// UAT
+// Users Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
@@ -11,7 +10,7 @@ var env = require('../../environments');
 // Parse Keys
 Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var UsersRewards = Parse.Object.extend('Users_Rewards');
+var User = Parse.Object.extend('User');
 
 // Data Dump
 var total;
@@ -19,37 +18,36 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-users-rewards-table.csv';
+var filename = 'uat-user-table.csv';
 var fields = [
   'objectId',
-  'userId',
-  'barId',
-  'userHasRedeemed',
-  'redeemedOnDate',
-  'acquiredDate',
-  'rewardType',
+  'username',
+  'dob',
+  'gender',
+  'loyaltyLevelId',
+  'roleId',
   'createdAt',
   'updatedAt'
 ];
 
-var usersRewardsQuery = new Parse.Query(UsersRewards);
-usersRewardsQuery.count().then(function(totalRows) {
+var userQuery = new Parse.Query(User);
+userQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var usersRewardsQuery = new Parse.Query(UsersRewards);
+  var userQuery = new Parse.Query(User);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      usersRewardsQuery.include('barId.userId');
-      usersRewardsQuery.descending('objectId');
-      usersRewardsQuery.limit(1000);
-      if (!firstRun) usersRewardsQuery.lessThan('objectId', objectId);
-      return usersRewardsQuery.find().then(function(results) {
+      userQuery.include('loyaltyLevelId.roleId');
+      userQuery.descending('objectId');
+      userQuery.limit(1000);
+      if (!firstRun) userQuery.lessThan('objectId', objectId);
+      return userQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
@@ -59,12 +57,11 @@ usersRewardsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            userId: obj.attributes.userId.id,
-            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            userHasRedeemed: obj.attributes.userHasRedeemed,
-            redeemedOnDate: obj.attributes.redeemedOnDate ? obj.attributes.redeemedOnDate.toISOString() : null,
-            acquiredDate: obj.attributes.acquiredDate ? obj.attributes.acquiredDate.toISOString() : null,
-            rewardType: obj.attributes.rewardType,
+            username: obj.attributes.username,
+            dob: obj.attributes.dob ? obj.attributes.dob.toISOString() : null,
+            gender: obj.attributes.gender ? obj.attributes.gender : null,
+            loyaltyLevelId: obj.attributes.loyaltyLevelId? obj.attributes.loyaltyLevelId.id : null,
+            roleId: obj.attributes.roleId ? obj.attributes.roleId.id : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

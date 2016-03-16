@@ -4,6 +4,7 @@ require 'active_support/core_ext/date_time/calculations'
 require 'active_support/core_ext/date/calculations'
 require 'active_support/core_ext/time/calculations'
 require 'mysql2'
+require '../../environments'
 
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',
@@ -13,7 +14,7 @@ ActiveRecord::Base.establish_connection(
   password: ENV["DB_PASSWORD"]
 )
 
-parse = Parse.init application_id: ENV["PARSE_ID"], api_key: ENV["PARSE_REST_API"]
+parse = Parse.init application_id: PARSE_ID, api_key: PARSE_REST_API
 
 class User < ActiveRecord::Base
 end
