@@ -2,7 +2,7 @@
 
 _environment=$1
 
-cd ~/stats/uat/mysql-scripts/
+cd ~/stats/mysql-scripts/
 
 ENV=$_environment /usr/bin/nodejs bar-table.js
 ENV=$_environment /usr/bin/nodejs events-table.js
