@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-timeline-table.csv';
+var filename;
 var fields = [
   'objectId',
   'barId',
@@ -30,6 +30,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'timeline-table.csv';
+} else {
+  filename = 'uat-timeline-table.csv';
+}
+
+// Query
 var timelineQuery = new Parse.Query(Timeline);
 timelineQuery.count().then(function(totalRows) {
   total = totalRows;

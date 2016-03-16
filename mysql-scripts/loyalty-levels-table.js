@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-loyalty-levels-table.csv';
+var filename;
 var fields = [
   'objectId',
   'name',
@@ -26,6 +26,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'loyalty-levels-table.csv';
+} else {
+  filename = 'uat-loyalty-levels-table.csv';
+}
+
+// Query
 var loyaltyLevelQuery = new Parse.Query(LoyaltyLevels);
 loyaltyLevelQuery.count().then(function(totalRows) {
   total = totalRows;

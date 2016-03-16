@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-users-rewards-table.csv';
+var filename;
 var fields = [
   'objectId',
   'userId',
@@ -31,6 +31,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'users-rewards-table.csv';
+} else {
+  filename = 'uat-users-rewards-table.csv';
+}
+
+// Query
 var usersRewardsQuery = new Parse.Query(UsersRewards);
 usersRewardsQuery.count().then(function(totalRows) {
   total = totalRows;

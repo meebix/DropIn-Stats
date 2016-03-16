@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-users-events-table.csv';
+var filename;
 var fields = [
   'objectId',
   'eventId',
@@ -30,6 +30,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'users-events-table.csv';
+} else {
+  filename = 'uat-users-events-table.csv';
+}
+
+// Query
 var usersEventsQuery = new Parse.Query(UsersEvents);
 usersEventsQuery.count().then(function(totalRows) {
   total = totalRows;

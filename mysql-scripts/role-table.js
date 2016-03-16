@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-role-table.csv';
+var filename;
 var fields = [
   'objectId',
   'name',
@@ -26,6 +26,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'role-table.csv';
+} else {
+  filename = 'uat-role-table.csv';
+}
+
+// Query
 var roleQuery = new Parse.Query(Role);
 roleQuery.count().then(function(totalRows) {
   total = totalRows;

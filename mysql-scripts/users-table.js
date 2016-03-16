@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-user-table.csv';
+var filename;
 var fields = [
   'objectId',
   'username',
@@ -30,6 +30,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'user-table.csv';
+} else {
+  filename = 'uat-user-table.csv';
+}
+
+// Query
 var userQuery = new Parse.Query(User);
 userQuery.count().then(function(totalRows) {
   total = totalRows;

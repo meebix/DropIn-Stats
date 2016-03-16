@@ -18,7 +18,7 @@ var iterations;
 var firstRun = true;
 var objectId = null;
 var tableData = [];
-var filename = 'uat-bar-table.csv';
+var filename;
 var fields = [
   'objectId',
   'name',
@@ -27,6 +27,14 @@ var fields = [
   'updatedAt'
 ];
 
+// Filename
+if (env.ENV === 'production') {
+  filename = 'bar-table.csv';
+} else {
+  filename = 'uat-bar-table.csv';
+}
+
+// Query
 var barQuery = new Parse.Query(Bar);
 barQuery.count().then(function(totalRows) {
   total = totalRows;
