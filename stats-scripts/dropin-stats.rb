@@ -4,7 +4,7 @@ require 'active_support/core_ext/date_time/calculations'
 require 'active_support/core_ext/date/calculations'
 require 'active_support/core_ext/time/calculations'
 require 'mysql2'
-require '../../environments'
+require '../environments'
 
 ActiveRecord::Base.establish_connection(
   adapter: 'mysql2',

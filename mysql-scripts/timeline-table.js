@@ -5,7 +5,7 @@ var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
 var moment = require('moment');
-var env = require('../../environments');
+var env = require('../environments');
 
 // Parse Keys
 Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
