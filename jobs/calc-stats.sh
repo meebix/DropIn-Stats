@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# The _environment variable gets passed a value from the inline bash command in crontab
 _environment=$1
 
 cd ~/stats/stats-scripts/

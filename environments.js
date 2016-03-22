@@ -1,3 +1,5 @@
+// ENV environment variable gets set inline in bash jobs
+
 var ENV;
 var PARSE_ID;
 var PARSE_SECRET;

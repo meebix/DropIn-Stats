@@ -1,3 +1,5 @@
+# ENV environment variable gets set inline in bash jobs
+
 if ENV["ENV"] === "production"
   PARSE_ID = ENV["PARSE_ID"]
   PARSE_REST_API = ENV["PARSE_REST_API"]
