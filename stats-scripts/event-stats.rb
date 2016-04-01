@@ -41,6 +41,7 @@ def save_stats(
   event_id,
   bar_id,
   users_sent_to,
+  users_have_viewed,
   credits_earned
 )
   event_stats = Parse::Object.new("Stats_Events")
@@ -81,6 +82,12 @@ def calc_stats(
       WHERE e.object_id = '#{event_id}'
     ").count
 
+    users_have_viewed = Event.find_by_sql("
+      SELECT DISTINCT user_id FROM events_users
+      WHERE event_id = '#{event_id}' AND
+      user_has_viewed = 1
+    ").count
+
     credits_earned = Event.find_by_sql("
       SELECT * FROM timelines
       WHERE event_type = 'Credit Earned' AND
@@ -96,6 +103,7 @@ def calc_stats(
       event_id,
       bar_id,
       users_sent_to,
+      users_have_viewed,
       credits_earned
     )
   end
