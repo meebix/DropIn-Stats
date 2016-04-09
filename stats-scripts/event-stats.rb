@@ -52,6 +52,7 @@ def save_stats(
   event_stats["eventId"] = event
   event_stats["barId"] = bar
   event_stats["usersSentTo"] = users_sent_to
+  event_stats["usersHaveViewed"] = users_have_viewed
   event_stats["creditsEarned"] = credits_earned
 
   event_stats.save
@@ -69,6 +70,9 @@ def calc_stats(
   start_calc_datetime = 1.day.ago.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   event_date_in_range = (start_calc_datetime..end_calc_datetime).cover?(event_end)
+
+  puts start_calc_datetime
+  puts end_calc_datetime
 
   event_start_datetime = event_start.iso8601
   event_end_datetime = event_end.iso8601
