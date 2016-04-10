@@ -42,7 +42,7 @@ def save_stats(
   bar_id,
   users_sent_to,
   credits_earned,
-  rewards_redeemed
+  visit_conversions
 )
   event_stats = Parse::Object.new("Stats_Events")
   event = event_pointer(event_id)
@@ -53,7 +53,7 @@ def save_stats(
   event_stats["barId"] = bar
   event_stats["usersSentTo"] = users_sent_to
   event_stats["creditsEarned"] = credits_earned
-  event_stats["rewardsRedeemed"] = rewards_redeemed
+  event_stats["visitConversions"] = visit_conversions
 
   event_stats.save
 
@@ -94,9 +94,9 @@ def calc_stats(
       )
     ").count
 
-    rewards_redeemed = Event.find_by_sql("
-      SELECT * FROM timelines
-      WHERE event_type = 'Reward Redeemed' AND
+    visit_conversions = Event.find_by_sql("
+      SELECT DISTINCT user_id FROM timelines
+      WHERE (event_type = 'Credit Earned' OR event_type = 'Reward Redeemed') AND
       bar_id = '#{bar_id}' AND
       date BETWEEN '#{event_start_datetime}' AND '#{event_end_datetime}' AND
       user_id IN (
@@ -110,7 +110,7 @@ def calc_stats(
       bar_id,
       users_sent_to,
       credits_earned,
-      rewards_redeemed
+      visit_conversions
     )
   end
 end
