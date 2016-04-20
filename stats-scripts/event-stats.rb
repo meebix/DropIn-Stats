@@ -121,9 +121,8 @@ def calc_stats(
       bar_id,
       users_sent_to,
       credits_earned,
-      credits_earned
-      visit_conversions
-      users_have_viewed,
+      visit_conversions,
+      users_have_viewed
     )
   end
 end
