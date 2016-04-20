@@ -42,7 +42,8 @@ def save_stats(
   bar_id,
   users_sent_to,
   credits_earned,
-  visit_conversions
+  visit_conversions,
+  users_have_viewed
 )
   event_stats = Parse::Object.new("Stats_Events")
   event = event_pointer(event_id)
@@ -53,6 +54,7 @@ def save_stats(
   event_stats["barId"] = bar
   event_stats["usersSentTo"] = users_sent_to
   event_stats["creditsEarned"] = credits_earned
+  event_stats["usersHaveViewed"] = users_have_viewed
   event_stats["visitConversions"] = visit_conversions
 
   event_stats.save
@@ -71,6 +73,9 @@ def calc_stats(
   end_calc_datetime = Time.now.change({ hour: 9, min: 0, sec: 0, usec: 0 }).iso8601
   event_date_in_range = (start_calc_datetime..end_calc_datetime).cover?(event_end)
 
+  puts start_calc_datetime
+  puts end_calc_datetime
+
   event_start_datetime = event_start.iso8601
   event_end_datetime = event_end.iso8601
 
@@ -81,6 +86,12 @@ def calc_stats(
       SELECT DISTINCT eu.user_id FROM events e
       JOIN events_users eu ON eu.event_id = e.object_id
       WHERE e.object_id = '#{event_id}'
+    ").count
+
+    users_have_viewed = Event.find_by_sql("
+      SELECT DISTINCT user_id FROM events_users
+      WHERE event_id = '#{event_id}' AND
+      user_has_viewed = 1
     ").count
 
     credits_earned = Event.find_by_sql("
@@ -110,7 +121,9 @@ def calc_stats(
       bar_id,
       users_sent_to,
       credits_earned,
+      credits_earned
       visit_conversions
+      users_have_viewed,
     )
   end
 end
