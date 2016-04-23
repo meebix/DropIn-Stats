@@ -47,10 +47,12 @@ end
 def calc_stats(bar_id)
   fourteen_days_ago = 14.days.ago.iso8601
 
+  puts fourteen_days_ago
+
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
     WHERE bar_id = '#{bar_id}' AND
-    event_type = 'Credit Earned' OR event_type = 'Reward Redeemed' AND
+    (event_type = 'Credit Earned' OR event_type = 'Reward Redeemed') AND
     date >= '#{fourteen_days_ago}'
   ").count
 

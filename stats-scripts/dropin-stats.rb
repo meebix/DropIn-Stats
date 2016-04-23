@@ -117,7 +117,7 @@ def calc_stats()
 
   active_users = Timeline.find_by_sql("
     SELECT DISTINCT user_id FROM timelines
-    WHERE event_type = 'Credit Earned' AND
+    (event_type = 'Credit Earned' OR event_type = 'Reward Redeemed') AND
     date >= '#{fourteen_days_ago}'
   ").count
 
