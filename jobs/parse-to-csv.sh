@@ -15,6 +15,7 @@ ENV=$_environment /usr/bin/nodejs users-rewards-table.js
 ENV=$_environment /usr/bin/nodejs users-promotions-table.js
 ENV=$_environment /usr/bin/nodejs users-bar-algo-table.js
 ENV=$_environment /usr/bin/nodejs users-bar-algo-dtl-table.js
+ENV=$_environment /usr/bin/nodejs users-bar-algo-timeline-table.js
 ENV=$_environment /usr/bin/nodejs users-feedback-table.js
 ENV=$_environment /usr/bin/nodejs users-table.js
 ENV=$_environment /usr/bin/nodejs app-params-table.js
