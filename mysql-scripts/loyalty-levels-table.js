@@ -61,7 +61,7 @@ loyaltyLevelQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            name: obj.attributes.name,
+            name: obj.attributes.name ? obj.attributes.name : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

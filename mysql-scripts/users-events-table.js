@@ -65,11 +65,11 @@ usersEventsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            eventId: obj.attributes.eventId.id,
-            userId: obj.attributes.userId.id,
-            barId: obj.attributes.barId.id,
-            userHasViewed: obj.attributes.userHasViewed,
-            markedForDeletion: obj.attributes.markedForDeletion,
+            eventId: obj.attributes.eventId ? obj.attributes.eventId.id : null,
+            userId: obj.attributes.userId ? obj.attributes.userId.id : null,
+            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
+            userHasViewed: obj.attributes.userHasViewed ? obj.attributes.userHasViewed : null,
+            markedForDeletion: obj.attributes.markedForDeletion ? obj.attributes.markedForDeletion : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

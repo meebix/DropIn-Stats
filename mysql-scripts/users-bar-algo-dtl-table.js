@@ -65,7 +65,7 @@ usersBarAlgoDtlQuery.count().then(function(totalRows) {
           var formattedObj = {
             objectId: obj.id,
             algoBarObjId: obj.attributes.algoBarObjId ? obj.attributes.algoBarObjId : null,
-            atBar: obj.attributes.atBar,
+            atBar: obj.attributes.atBar ? obj.attributes.atBar : null,
             barAlgo: obj.attributes.barAlgo ? obj.attributes.barAlgo : null,
             userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             createdAt: obj.createdAt.toISOString(),

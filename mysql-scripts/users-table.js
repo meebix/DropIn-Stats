@@ -66,7 +66,7 @@ userQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            username: obj.attributes.username,
+            username: obj.attributes.username ? obj.attributes.username : null,
             dob: obj.attributes.dob ? obj.attributes.dob.toISOString() : null,
             gender: obj.attributes.gender ? obj.attributes.gender : null,
             loyaltyLevelId: obj.attributes.loyaltyLevelId? obj.attributes.loyaltyLevelId.id : null,

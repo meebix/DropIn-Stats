@@ -66,10 +66,10 @@ timelineQuery.count().then(function(totalRows) {
           var formattedObj = {
             objectId: obj.id,
             barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            date: obj.attributes.date.toISOString(),
-            event: obj.attributes.event,
-            eventType: obj.attributes.eventType,
-            userId: obj.attributes.userId.id,
+            date: obj.attributes.date ? obj.attributes.date.toISOString() : null,
+            event: obj.attributes.event ? obj.attributes.event : null,
+            eventType: obj.attributes.eventType ? obj.attributes.eventType : null,
+            userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

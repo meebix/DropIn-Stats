@@ -66,12 +66,12 @@ eventsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            name: obj.attributes.name,
-            barId: obj.attributes.barId.id,
-            loyaltyLevelId: obj.attributes.loyaltyLevelId.id,
-            eventStart: obj.attributes.eventStart.toISOString(),
-            eventEnd: obj.attributes.eventEnd.toISOString(),
-            markedForDeletion: obj.attributes.markedForDeletion,
+            name: obj.attributes.name ? obj.attributes.name : null,
+            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
+            loyaltyLevelId: obj.attributes.loyaltyLevelId ? obj.attributes.loyaltyLevelId.id : null,
+            eventStart: obj.attributes.eventStart ? obj.attributes.eventStart.toISOString() : null,
+            eventEnd: obj.attributes.eventEnd ? obj.attributes.eventEnd.toISOString() : null,
+            markedForDeletion: obj.attributes.markedForDeletion ? obj.attributes.markedForDeletion : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

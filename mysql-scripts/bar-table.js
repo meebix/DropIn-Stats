@@ -62,8 +62,8 @@ barQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            name: obj.attributes.name,
-            isActive: obj.attributes.isActive,
+            name: obj.attributes.name ? obj.attributes.name : null,
+            isActive: obj.attributes.isActive ? obj.attributes.isActive : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };
