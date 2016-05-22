@@ -1,4 +1,4 @@
-// Timeline Table Dump
+// Users Bar Algo Timeline Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
@@ -10,7 +10,7 @@ var env = require('../environments');
 // Parse Keys
 Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var Timeline = Parse.Object.extend('Users_Timeline');
+var UsersBarAlgoTimeline = Parse.Object.extend('Users_Bar_Algo_Timeline');
 
 // Data Dump
 var total;
@@ -24,7 +24,8 @@ var fields = [
   'barId',
   'date',
   'event',
-  'eventType',
+  'excludeRecord',
+  'timeSpent',
   'userId',
   'createdAt',
   'updatedAt'
@@ -32,30 +33,30 @@ var fields = [
 
 // Filename
 if (env.ENV === 'production') {
-  filename = 'timeline-table.csv';
+  filename = 'users-bar-algo-timeline-table.csv';
 } else {
-  filename = 'uat-timeline-table.csv';
+  filename = 'uat-users-bar-algo-timeline-table.csv';
 }
 
 // Query
-var timelineQuery = new Parse.Query(Timeline);
-timelineQuery.count().then(function(totalRows) {
+var usersBarAlgoTimelineQuery = new Parse.Query(UsersBarAlgoTimeline);
+usersBarAlgoTimelineQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var timelineQuery = new Parse.Query(Timeline);
+  var usersBarAlgoTimelineQuery = new Parse.Query(UsersBarAlgoTimeline);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      timelineQuery.include('barId.userId');
-      timelineQuery.descending('objectId');
-      timelineQuery.limit(1000);
-      if (!firstRun) timelineQuery.lessThan('objectId', objectId);
-      return timelineQuery.find().then(function(results) {
+      usersBarAlgoTimelineQuery.include('barId.userId');
+      usersBarAlgoTimelineQuery.descending('objectId');
+      usersBarAlgoTimelineQuery.limit(1000);
+      if (!firstRun) usersBarAlgoTimelineQuery.lessThan('objectId', objectId);
+      return usersBarAlgoTimelineQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
@@ -65,10 +66,11 @@ timelineQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
             date: obj.attributes.date ? obj.attributes.date.toISOString() : null,
             event: obj.attributes.event ? obj.attributes.event : null,
-            eventType: obj.attributes.eventType ? obj.attributes.eventType : null,
+            excludeRecord: obj.attributes.excludeRecord ? obj.attributes.excludeRecord : null,
+            timeSpent: obj.attributes.timeSpent ? obj.attributes.timeSpent : null,
+            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
             userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()

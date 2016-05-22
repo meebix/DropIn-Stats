@@ -76,7 +76,7 @@ appParamsQuery.count().then(function(totalRows) {
             number3: obj.attributes.number3 ? obj.attributes.number3 : null,
             number4: obj.attributes.number4 ? obj.attributes.number4 : null,
             number5: obj.attributes.number5 ? obj.attributes.number5 : null,
-            paramName: obj.attributes.paramName,
+            paramName: obj.attributes.paramName ? obj.attributes.paramName : null,
             string1: obj.attributes.string1 ? obj.attributes.string1 : null,
             string2: obj.attributes.string2 ? obj.attributes.string2 : null,
             createdAt: obj.createdAt.toISOString(),

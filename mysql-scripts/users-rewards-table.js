@@ -66,12 +66,12 @@ usersRewardsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            userId: obj.attributes.userId.id,
+            userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            userHasRedeemed: obj.attributes.userHasRedeemed,
+            userHasRedeemed: obj.attributes.userHasRedeemed ? obj.attributes.userHasRedeemed : null,
             redeemedOnDate: obj.attributes.redeemedOnDate ? obj.attributes.redeemedOnDate.toISOString() : null,
             acquiredDate: obj.attributes.acquiredDate ? obj.attributes.acquiredDate.toISOString() : null,
-            rewardType: obj.attributes.rewardType,
+            rewardType: obj.attributes.rewardType ? obj.attributes.rewardType : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

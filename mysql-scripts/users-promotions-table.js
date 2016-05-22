@@ -67,12 +67,12 @@ usersPromotionsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            lastPromotionUsed: obj.attributes.lastPromotionUsed,
-            pendingReferralCredits: obj.attributes.pendingReferralCredits,
-            sentShares: obj.attributes.sentShares,
-            shareCode: obj.attributes.shareCode,
-            shareCreditReceived: obj.attributes.shareCreditReceived,
-            totalReferralCredits: obj.attributes.totalReferralCredits,
+            lastPromotionUsed: obj.attributes.lastPromotionUsed ? obj.attributes.lastPromotionUsed : null,
+            pendingReferralCredits: obj.attributes.pendingReferralCredits ? obj.attributes.pendingReferralCredits : null,
+            sentShares: obj.attributes.sentShares ? obj.attributes.sentShares : null,
+            shareCode: obj.attributes.shareCode ? obj.attributes.shareCode : null,
+            shareCreditReceived: obj.attributes.shareCreditReceived ? obj.attributes.shareCreditReceived : null,
+            totalReferralCredits: obj.attributes.totalReferralCredits ? obj.attributes.totalReferralCredits : null,
             userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
