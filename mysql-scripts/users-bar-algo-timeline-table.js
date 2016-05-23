@@ -22,11 +22,11 @@ var filename;
 var fields = [
   'objectId',
   'barId',
+  'userId',
   'date',
   'event',
   'excludeRecord',
   'timeSpent',
-  'userId',
   'createdAt',
   'updatedAt'
 ];
