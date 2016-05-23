@@ -70,7 +70,7 @@ usersBarAlgoTimelineQuery.count().then(function(totalRows) {
             userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             date: obj.attributes.date ? obj.attributes.date.toISOString() : null,
             event: obj.attributes.event ? obj.attributes.event : null,
-            excludeRecord: obj.attributes.excludeRecord ? obj.attributes.excludeRecord : null,
+            excludeRecord: obj.attributes.excludeRecord,
             timeSpent: obj.attributes.timeSpent ? obj.attributes.timeSpent : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()

@@ -71,7 +71,7 @@ userQuery.count().then(function(totalRows) {
             gender: obj.attributes.gender ? obj.attributes.gender : null,
             loyaltyLevelId: obj.attributes.loyaltyLevelId? obj.attributes.loyaltyLevelId.id : null,
             roleId: obj.attributes.roleId ? obj.attributes.roleId.id : null,
-            completedSignup: obj.attributes.completedSignup ? obj.attributes.completedSignup : null,
+            completedSignup: obj.attributes.completedSignup,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

@@ -71,7 +71,7 @@ eventsQuery.count().then(function(totalRows) {
             loyaltyLevelId: obj.attributes.loyaltyLevelId ? obj.attributes.loyaltyLevelId.id : null,
             eventStart: obj.attributes.eventStart ? obj.attributes.eventStart.toISOString() : null,
             eventEnd: obj.attributes.eventEnd ? obj.attributes.eventEnd.toISOString() : null,
-            markedForDeletion: obj.attributes.markedForDeletion ? obj.attributes.markedForDeletion : null,
+            markedForDeletion: obj.attributes.markedForDeletion,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

@@ -73,9 +73,9 @@ usersBarAlgoQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            activeBar: obj.attributes.activeBar ? obj.attributes.activeBar : null,
+            activeBar: obj.attributes.activeBar,
             barSubsequentEntry: obj.attributes.barSubsequentEntry ? obj.attributes.barSubsequentEntry.toISOString() : null,
-            initialValuesUpdated: obj.attributes.initialValuesUpdated ? obj.attributes.initialValuesUpdated : null,
+            initialValuesUpdated: obj.attributes.initialValuesUpdated,
             lastCreditEarned: obj.attributes.lastCreditEarned ? obj.attributes.lastCreditEarned.toISOString() : null,
             lastVisit: obj.attributes.lastVisit ? obj.attributes.lastVisit.toISOString() : null,
             lockOutEndTime: obj.attributes.lockOutEndTime ? obj.attributes.lockOutEndTime.toISOString() : null,

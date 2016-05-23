@@ -69,8 +69,8 @@ appParamsQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            bool1: obj.attributes.bool1 ? obj.attributes.bool1 : null,
-            bool2: obj.attributes.bool2 ? obj.attributes.bool2 : null,
+            bool1: obj.attributes.bool1,
+            bool2: obj.attributes.bool2,
             number1: obj.attributes.number1 ? obj.attributes.number1 : null,
             number2: obj.attributes.number2 ? obj.attributes.number2 : null,
             number3: obj.attributes.number3 ? obj.attributes.number3 : null,

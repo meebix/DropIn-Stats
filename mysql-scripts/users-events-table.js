@@ -68,8 +68,8 @@ usersEventsQuery.count().then(function(totalRows) {
             eventId: obj.attributes.eventId ? obj.attributes.eventId.id : null,
             userId: obj.attributes.userId ? obj.attributes.userId.id : null,
             barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            userHasViewed: obj.attributes.userHasViewed ? obj.attributes.userHasViewed : null,
-            markedForDeletion: obj.attributes.markedForDeletion ? obj.attributes.markedForDeletion : null,
+            userHasViewed: obj.attributes.userHasViewed,
+            markedForDeletion: obj.attributes.markedForDeletion,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };
