@@ -22,8 +22,10 @@ var filename;
 var fields = [
   'objectId',
   'name',
+  'description',
   'barId',
   'loyaltyLevelId',
+  'photo',
   'eventStart',
   'eventEnd',
   'markedForDeletion',
@@ -67,8 +69,10 @@ eventsQuery.count().then(function(totalRows) {
           var formattedObj = {
             objectId: obj.id,
             name: obj.attributes.name ? obj.attributes.name : null,
+            description: obj.attributes.description ? obj.attributes.description : null,
             barId: obj.attributes.barId ? obj.attributes.barId.id : null,
             loyaltyLevelId: obj.attributes.loyaltyLevelId ? obj.attributes.loyaltyLevelId.id : null,
+            photo: obj.attributes.photo ? obj.attributes.photo._url : null,
             eventStart: obj.attributes.eventStart ? obj.attributes.eventStart.toISOString() : null,
             eventEnd: obj.attributes.eventEnd ? obj.attributes.eventEnd.toISOString() : null,
             markedForDeletion: obj.attributes.markedForDeletion,

@@ -26,7 +26,14 @@ var fields = [
   'gender',
   'loyaltyLevelId',
   'roleId',
+  'barId',
+  'activeRewards',
+  'globalCredits',
+  'viewedInstructions',
   'completedSignup',
+  'excludeUser',
+  'shareCode',
+  'ageBucket',
   'createdAt',
   'updatedAt'
 ];
@@ -71,7 +78,14 @@ userQuery.count().then(function(totalRows) {
             gender: obj.attributes.gender ? obj.attributes.gender : null,
             loyaltyLevelId: obj.attributes.loyaltyLevelId? obj.attributes.loyaltyLevelId.id : null,
             roleId: obj.attributes.roleId ? obj.attributes.roleId.id : null,
-            completedSignup: obj.attributes.completedSignup,
+            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
+            activeRewards: obj.attributes.activeRewards ? obj.attributes.activeRewards : null,
+            globalCredits: obj.attributes.globalCredits ? obj.attributes.globalCredits : null,
+            viewedInstructions: obj.attributes.viewedInstructions ? obj.attributes.viewedInstructions : null,
+            completedSignup: obj.attributes.completedSignup ? obj.attributes.completedSignup : null,
+            excludeUser: obj.attributes.excludeUser ? obj.attributes.excludeUser : null,
+            shareCode: obj.attributes.shareCode ? obj.attributes.shareCode : null,
+            ageBucket: obj.attributes.ageBucket ? obj.attributes.ageBucket : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };
