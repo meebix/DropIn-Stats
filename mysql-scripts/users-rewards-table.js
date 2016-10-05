@@ -27,6 +27,10 @@ var fields = [
   'redeemedOnDate',
   'acquiredDate',
   'rewardType',
+  'rewardName',
+  'rewardActiveEnd',
+  'rewardActiveStart',
+  'barIdFromAlgo',
   'createdAt',
   'updatedAt'
 ];
@@ -72,6 +76,10 @@ usersRewardsQuery.count().then(function(totalRows) {
             redeemedOnDate: obj.attributes.redeemedOnDate ? obj.attributes.redeemedOnDate.toISOString() : null,
             acquiredDate: obj.attributes.acquiredDate ? obj.attributes.acquiredDate.toISOString() : null,
             rewardType: obj.attributes.rewardType ? obj.attributes.rewardType : null,
+            rewardName: obj.attributes.rewardName ? obj.attributes.rewardName : null,
+            rewardActiveEnd: obj.attributes.rewardActiveEnd ? obj.attributes.rewardActiveEnd.toISOString() : null,
+            rewardActiveStart: obj.attributes.rewardActiveStart ? obj.attributes.rewardActiveStart.toISOString() : null,
+            barIdFromAlgo: obj.attributes.barIdFromAlgo ? obj.attributes.barIdFromAlgo.id : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

@@ -1,4 +1,4 @@
-// Timeline Table Dump
+// Session Table Dump
 
 var Parse = require('parse').Parse;
 var json2csv = require('json2csv');
@@ -10,7 +10,7 @@ var env = require('../environments');
 // Parse Keys
 Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
 
-var Timeline = Parse.Object.extend('Users_Timeline');
+var Session = Parse.Object.extend('Session');
 
 // Data Dump
 var total;
@@ -21,10 +21,11 @@ var tableData = [];
 var filename;
 var fields = [
   'objectId',
-  'barId',
-  'date',
-  'event',
-  'eventType',
+  'createdWith',
+  'expiresAt',
+  'installationId',
+  'restricted',
+  'sessionToken',
   'userId',
   'createdAt',
   'updatedAt'
@@ -32,44 +33,44 @@ var fields = [
 
 // Filename
 if (env.ENV === 'production') {
-  filename = 'timeline-table.csv';
+  filename = 'session-table.csv';
 } else {
-  filename = 'uat-timeline-table.csv';
+  filename = 'uat-session-table.csv';
 }
 
 // Query
-var timelineQuery = new Parse.Query(Timeline);
-timelineQuery.count().then(function(totalRows) {
+var sessionQuery = new Parse.Query(Session);
+sessionQuery.count().then(function(totalRows) {
   total = totalRows;
   iterations = Math.ceil(total / 1000);
 })
 .then(function() {
-  var timelineQuery = new Parse.Query(Timeline);
+  var sessionQuery = new Parse.Query(Session);
 
   var promise = Parse.Promise.as();
   _.times(iterations, function() {
     promise = promise.then(function() {
       var count = 0;
 
-      timelineQuery.include('barId.userId');
-      timelineQuery.descending('objectId');
-      timelineQuery.limit(1000);
-      if (!firstRun) timelineQuery.lessThan('objectId', objectId);
-      return timelineQuery.find().then(function(results) {
+      sessionQuery.descending('objectId');
+      sessionQuery.limit(1000);
+      if (!firstRun) sessionQuery.lessThan('objectId', objectId);
+      return sessionQuery.find().then(function(results) {
         _.each(results, function(obj) {
           count = count + 1;
 
           if (count === 1000) {
             objectId = obj.id;
           }
-          console.log(obj.attributes);
+
           var formattedObj = {
             objectId: obj.id,
-            barId: obj.attributes.barId ? obj.attributes.barId.id : null,
-            date: obj.attributes.date ? obj.attributes.date.toISOString() : null,
-            event: obj.attributes.event ? obj.attributes.event : null,
-            eventType: obj.attributes.eventType ? obj.attributes.eventType : null,
-            userId: obj.attributes.userId ? obj.attributes.userId.id : null,
+            createdWith: obj.attributes.createdWith ? obj.attributes.createdWith : null,
+            expiresAt: obj.attributes.expiresAt ? obj.attributes.expiresAt.toISOString() : null,
+            installationId: obj.attributes.installationId ? obj.attributes.installationId : null,
+            restricted: obj.attributes.restricted ? obj.attributes.restricted : null,
+            sessionToken: obj.attributes.sessionToken ? obj.attributes.sessionToken : null,
+            userId: obj.attributes.userId ? obj.attributes.userId : null,
             createdAt: obj.createdAt.toISOString(),
             updatedAt: obj.updatedAt.toISOString()
           };

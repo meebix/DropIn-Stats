@@ -22,7 +22,7 @@ var filename;
 var fields = [
   'objectId',
   'activeBar',
-  // 'barObjIdString' // Not using because the barId is converted to a string, this is not necessary for SQL
+  'barObjIdString',
   'barSubsequentEntry',
   'initialValuesUpdated',
   'lastCreditEarned',
@@ -73,9 +73,10 @@ usersBarAlgoQuery.count().then(function(totalRows) {
 
           var formattedObj = {
             objectId: obj.id,
-            activeBar: obj.attributes.activeBar,
+            activeBar: obj.attributes.activeBar ? obj.attributes.activeBar : null,
+            barObjIdString: obj.attributes.barObjIdString ? obj.attributes.barObjIdString : null,
             barSubsequentEntry: obj.attributes.barSubsequentEntry ? obj.attributes.barSubsequentEntry.toISOString() : null,
-            initialValuesUpdated: obj.attributes.initialValuesUpdated,
+            initialValuesUpdated: obj.attributes.initialValuesUpdated ? obj.attributes.initialValuesUpdated : null,
             lastCreditEarned: obj.attributes.lastCreditEarned ? obj.attributes.lastCreditEarned.toISOString() : null,
             lastVisit: obj.attributes.lastVisit ? obj.attributes.lastVisit.toISOString() : null,
             lockOutEndTime: obj.attributes.lockOutEndTime ? obj.attributes.lockOutEndTime.toISOString() : null,
