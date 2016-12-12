@@ -1,5 +1,5 @@
 {
-  "name": "Drop In Stats",
+  "name": "Drop-In-Stats",
   "version": "1.0.0",
   "description": "Scripts to calculate analytical stats",
   "dependencies": {

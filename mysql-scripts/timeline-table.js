@@ -62,7 +62,7 @@ timelineQuery.count().then(function(totalRows) {
           if (count === 1000) {
             objectId = obj.id;
           }
-          console.log(obj.attributes);
+
           var formattedObj = {
             objectId: obj.id,
             barId: obj.attributes.barId ? obj.attributes.barId.id : null,
