@@ -33,7 +33,8 @@ var fields = [
   'rewardActiveStart',
   'barIdFromAlgo',
   'createdAt',
-  'updatedAt'
+  'updatedAt',
+  'selectedRewardName'
 ];
 
 // Filename
@@ -82,7 +83,8 @@ usersRewardsQuery.count().then(function(totalRows) {
             rewardActiveStart: obj.attributes.rewardActiveStart ? obj.attributes.rewardActiveStart.toISOString() : null,
             barIdFromAlgo: obj.attributes.barIdFromAlgo ? obj.attributes.barIdFromAlgo.id : null,
             createdAt: obj.createdAt.toISOString(),
-            updatedAt: obj.updatedAt.toISOString()
+            updatedAt: obj.updatedAt.toISOString(),
+            selectedRewardName: obj.attributes.selectedRewardName ? obj.attributes.selectedRewardName : null
           };
 
           tableData.push(formattedObj);
