@@ -1,6 +1,6 @@
 // Users Rewards Table Dump
 
-var Parse = require('parse').Parse;
+var Parse = require('parse/node');
 var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
@@ -8,7 +8,8 @@ var moment = require('moment');
 var env = require('../environments');
 
 // Parse Keys
-Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
+Parse.initialize(env.PARSE_ID);
+Parse.serverURL = env.SERVER_URL;
 
 var UsersRewards = Parse.Object.extend('Users_Rewards');
 
@@ -32,7 +33,8 @@ var fields = [
   'rewardActiveStart',
   'barIdFromAlgo',
   'createdAt',
-  'updatedAt'
+  'updatedAt',
+  'selectedRewardName'
 ];
 
 // Filename
@@ -81,7 +83,8 @@ usersRewardsQuery.count().then(function(totalRows) {
             rewardActiveStart: obj.attributes.rewardActiveStart ? obj.attributes.rewardActiveStart.toISOString() : null,
             barIdFromAlgo: obj.attributes.barIdFromAlgo ? obj.attributes.barIdFromAlgo.id : null,
             createdAt: obj.createdAt.toISOString(),
-            updatedAt: obj.updatedAt.toISOString()
+            updatedAt: obj.updatedAt.toISOString(),
+            selectedRewardName: obj.attributes.selectedRewardName ? obj.attributes.selectedRewardName : null
           };
 
           tableData.push(formattedObj);

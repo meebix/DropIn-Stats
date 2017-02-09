@@ -1,6 +1,6 @@
 // Users Table Dump
 
-var Parse = require('parse').Parse;
+var Parse = require('parse/node');
 var json2csv = require('json2csv');
 var fs = require('fs');
 var _ = require('underscore');
@@ -8,7 +8,8 @@ var moment = require('moment');
 var env = require('../environments');
 
 // Parse Keys
-Parse.initialize(env.PARSE_ID, env.PARSE_SECRET);
+Parse.initialize(env.PARSE_ID);
+Parse.serverURL = env.SERVER_URL;
 
 var User = Parse.Object.extend('User');
 
